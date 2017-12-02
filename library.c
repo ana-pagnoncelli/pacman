@@ -129,7 +129,7 @@ void move_fantasma (int *cx, int *cy)
 
 int testa_parede (int x, int y)
 {
-    if(x>100 || y>30 || x <= 1 || y <= 1)
+    if(x>103 || y>33 || x <= 3 || y <= 3)
         return 0;
 
     else
@@ -185,7 +185,7 @@ void gerador_fantasma (FANTASMA fantasma[])
 {
 
     fantasma[0].pos.x = 5;
-    fantasma[0].pos.y = 2;
+    fantasma[0].pos.y = 3;
     fantasma[1].pos.x = 15;
     fantasma[1].pos.y = 5;
     fantasma[2].pos.x = 35;
