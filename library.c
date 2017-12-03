@@ -181,13 +181,55 @@ void direcao_movimento_fantasma (int *x, int *y, int direcao)
     }
 }
 
-void gerador_fantasma (FANTASMA fantasma[])
+void gerador_fantasma (FANTASMA fantasma[], char matriz_lab[LINHA_LAB][COLUNA_LAB])
 {
 
-    fantasma[0].pos.x = 5;
-    fantasma[0].pos.y = 4;
-    fantasma[1].pos.x = 15;
-    fantasma[1].pos.y = 5;
+    int linha = 0, coluna = 0, encontrado;
+
+    encontrado = 0;
+
+    while(encontrado == 0 && linha < LINHA_LAB)
+    {
+        while(encontrado == 0 && coluna < COLUNA_LAB)
+        {
+            if(matriz_lab[linha][coluna] == 'W')
+            {
+                fantasma[0].pos.x = coluna + 3;
+                fantasma[0].pos.y = linha + 3;
+                textbackground(RED);
+                putchxy(coluna + 3, linha + 3, 'W');
+                encontrado = 1;
+                printf("chegooou\nchegou\nchegou\chegouuuuuuuuuuuuuuuuuaoudua\nsausayn\nsahsias");
+            }
+            coluna ++;
+        }
+        linha ++;
+    }
+    /* for(linha = 0; linha < LINHA_LAB; linha ++)
+     {
+         for(coluna = 0; coluna <COLUNA_LAB; coluna ++)
+         {
+             if(matriz_lab[linha][coluna] == 'W')
+             {
+                 fantasma[0].pos.x = coluna + 3;
+                 fantasma[0].pos.y = linha + 3;
+                 textbackground(RED);
+                 putchxy(coluna + 3, linha + 3, 'W');
+             }
+         }
+     }*/
+  /*  for(linha = linha; linha < LINHA_LAB; linha ++)
+    {
+        for(coluna = coluna; coluna <COLUNA_LAB; coluna ++)
+        {
+            if(matriz_lab[linha][coluna] == 'W')
+            {
+                fantasma[1].pos.x = coluna + 3;
+                fantasma[1].pos.y = linha + 3;
+            }
+        }
+    }*/
+
     fantasma[2].pos.x = 35;
     fantasma[2].pos.y = 10;
     fantasma[3].pos.x = 55;
@@ -215,17 +257,28 @@ void le_labirinto (char matriz_lab[LINHA_LAB][COLUNA_LAB])
 
     arq = fopen("labirinto.txt", "r");
 
-    for(linha = 0; linha <= LINHA_LAB; linha ++)
+    for(linha = 0; linha < LINHA_LAB; linha ++)
     {
-        for(coluna = 0; coluna <= COLUNA_LAB; coluna ++)
+        for(coluna = 0; coluna < COLUNA_LAB; coluna ++)
         {
             matriz_lab[linha][coluna] = fgetc(arq);
         }
 
         matriz_lab[linha][coluna] = '\0';
-        gotoxy(3, 3+linha);
-        puts(matriz_lab[linha]);
     }
 
     fclose(arq);
+}
+void printa_labirinto(char matriz_lab[LINHA_LAB][COLUNA_LAB])
+{
+    int linha, coluna;
+
+    for(linha = 0; linha < LINHA_LAB; linha ++)
+    {
+        gotoxy(3, 3 + linha);
+        for(coluna = 0; coluna < COLUNA_LAB; coluna ++)
+        {
+            printf("%c", matriz_lab[linha][coluna]);
+        }
+    }
 }

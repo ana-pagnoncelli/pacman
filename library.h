@@ -4,8 +4,8 @@
 #include <time.h>
 #define NUM_FANTASMA 5
 #define BLUE 9
-#define LINHA_LAB 30
-#define COLUNA_LAB 100
+#define LINHA_LAB 31
+#define COLUNA_LAB 101
 
 typedef struct
 {
@@ -44,6 +44,7 @@ void SetConsoleSize(unsigned largura, unsigned altura); //funciona
 void move_fantasma (int *cx, int *cy); //funciona
 int testa_parede (int x, int y);
 void direcao_movimento_fantasma (int *x, int *y, int direcao);
-void gerador_fantasma (FANTASMA fantasma[]);
+void gerador_fantasma (FANTASMA fantasma[], char matriz_lab[LINHA_LAB][COLUNA_LAB]);
 void movimenta_todos_fastasmas (FANTASMA fantasma[]);
 void le_labirinto (char matriz_lab[LINHA_LAB][COLUNA_LAB]);
+void printa_labirinto(char matriz_lab[LINHA_LAB][COLUNA_LAB]);
