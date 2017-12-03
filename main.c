@@ -4,10 +4,12 @@
 #include <windows.h>
 #include <time.h>
 #define NUM_FANTASMA 5
+#define LINHA_LAB 31
+#define COLUNA_LAB 101
 
 int main ()
 {
-    char matriz_lab [30][100];
+    char matriz_lab [LINHA_LAB][COLUNA_LAB];
     int direcao, coordX, coordY, direcaoT, cFx, cFy;
     int inicia_jogo;
     FANTASMA fantasma[NUM_FANTASMA];
@@ -34,19 +36,7 @@ int main ()
         le_labirinto(matriz_lab);
         //printa_labirinto(matriz_lab);
         gerador_fantasma(fantasma, matriz_lab);
-        while(encontrado == 0 && linha < LINHA_LAB)
-    {
-                gotoxy(3, 3 + linha);
 
-        while(encontrado == 0 && coluna < COLUNA_LAB)
-        {
-            printf("%c", matriz_lab[linha][coluna]);
-            encontrado = 1;
-            }
-            coluna ++;
-        }
-        linha ++;
-    }
         desenha_menu();
 
         do
@@ -64,7 +54,7 @@ int main ()
         while(coordX !=0);
 
 
-
+    }
 
     gotoxy(35, 35);
     return 0;
