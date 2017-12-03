@@ -35,7 +35,7 @@ int main ()
         system("cls");
 
         le_labirinto(matriz_lab);
-        // printa_labirinto(matriz_lab);
+        printa_labirinto(matriz_lab);
         gerador_fantasma(fantasma, matriz_lab);
         posicao_pacman(&jogador, matriz_lab);
 

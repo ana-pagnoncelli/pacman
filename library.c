@@ -173,7 +173,7 @@ void move_fantasma (int *cx, int *cy, char matriz_lab [LINHA_LAB][COLUNA_LAB])
 
 int testa_parede (int x, int y, char matriz_lab [LINHA_LAB][COLUNA_LAB])
 {
-    if(x>103 || y>32 || x <= 2 || y <= 3 || matriz_lab[y][x] == '#')
+    if(x>103 || y>32 || x <= 2 || y <= 3 || matriz_lab[y-3][x-3] == '#')
        return 0;
 
     else
