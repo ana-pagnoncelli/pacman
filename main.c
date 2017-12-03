@@ -35,21 +35,23 @@ int main ()
         system("cls");
 
         le_labirinto(matriz_lab);
-        //printa_labirinto(matriz_lab);
+        // printa_labirinto(matriz_lab);
         gerador_fantasma(fantasma, matriz_lab);
+        posicao_pacman(&jogador, matriz_lab);
 
         desenha_menu();
 
         do
         {
             movimenta_todos_fastasmas (fantasma);
+
             if(kbhit())
             {
                 direcaoT = traduz_teclas();
                 if(direcaoT != 9)
                     direcao = direcaoT;
             }
-            move_pacman (&coordX, &coordY, direcao);
+            move_pacman (&jogador, direcao, matriz_lab);
             Sleep (250);
         }
         while(coordX !=0);

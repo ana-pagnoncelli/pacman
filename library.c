@@ -57,24 +57,21 @@ int traduz_teclas ()
         return 9; //default
 }
 
-void move_pacman (int *cx, int *cy, int direcao, char matriz_lab[LINHA_LAB][COLUNA_LAB])
+void posicao_pacman(PACMAN *jogador, char matriz_lab[LINHA_LAB][COLUNA_LAB])
 {
-    int xt = *cx, yt = *cy;
+    int encontrado = 0, linha = 0, coluna = 0;
 
-    int linha = 0, coluna = 0, encontrado = 0;
-
-    while(encontrado < 5 && linha < LINHA_LAB)
+    while(encontrado == 0 && linha < LINHA_LAB)
     {
-        while(encontrado < 5 && coluna < COLUNA_LAB)
+        while(encontrado == 0 && coluna < COLUNA_LAB)
         {
-            if(matriz_lab[linha][coluna] == 'W')
+            if(matriz_lab[linha][coluna] == 'C')
             {
-                fantasma[i].pos.x = coluna + 3;
-                fantasma[i].pos.y = linha + 3;
-                textbackground(RED);
-                putchxy(coluna + 3, linha + 3, 'W');
-                encontrado ++;
-                i++;
+                jogador->pos.x = coluna + 3;
+                jogador->pos.y = linha + 3;
+                textbackground(YELLOW);
+                putchxy(coluna + 3, linha + 3, 'C');
+                encontrado = 1;
             }
             coluna ++;
         }
@@ -82,9 +79,17 @@ void move_pacman (int *cx, int *cy, int direcao, char matriz_lab[LINHA_LAB][COLU
         linha ++;
     }
 
+}
+
+void move_pacman (PACMAN *jogador, int direcao, char matriz_lab[LINHA_LAB][COLUNA_LAB])
+{
+    int xt, yt;
+
+    xt = jogador->pos.x;
+    yt = jogador->pos.y;
 
     textbackground(BLACK);
-    putchxy(*cx, *cy, ' ');
+    putchxy(jogador->pos.x, jogador->pos.y, ' ');
 
     switch(direcao)
     {
@@ -101,13 +106,14 @@ void move_pacman (int *cx, int *cy, int direcao, char matriz_lab[LINHA_LAB][COLU
         xt--;
         break;
     }
+    textbackground(BLACK);
     if(testa_parede(xt, yt) == 1)
     {
-        *cx = xt;
-        *cy = yt;
+        jogador->pos.x = xt;
+        jogador->pos.y = yt;
     }
     textbackground(YELLOW);
-    putchxy(*cx, *cy, 'C');
+    putchxy(jogador->pos.x, jogador->pos.y, 'C');
     textbackground(BLACK);
 }
 
