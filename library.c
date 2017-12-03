@@ -105,6 +105,13 @@ void move_pacman (PACMAN *jogador, int direcao, char matriz_lab[LINHA_LAB][COLUN
     yt = jogador->pos.y;
 
     textbackground(BLACK);
+
+
+    if(matriz_lab[yt-3][xt-3] == 'o' || matriz_lab[yt-3][xt-3] == '*' ) //cada vez que come uma bolachinha poe um espaço branco na matriz
+    {
+       matriz_lab[yt-3][xt-3] = ' '; //senao o fantasma desenha de novo.
+    }
+
     putchxy(jogador->pos.x, jogador->pos.y, ' ');
 
     switch(direcao)
@@ -153,13 +160,29 @@ void SetConsoleSize(unsigned largura, unsigned altura) //aumenta tamanho da tela
 
 void move_fantasma (int *cx, int *cy, char matriz_lab [LINHA_LAB][COLUNA_LAB])
 {
-    int direcao;
+    int direcao, x, y;
 
+    x = *cx ;
+    y = *cy ;
 
     direcao = rand() %4 ;
 
     textbackground(BLACK);
-    putchxy(*cx, *cy, ' ');
+
+    if(matriz_lab[y-3][x-3] == 'o' ) //quando o fantasma passa por cima dos espaços q contem bolachinhas
+    {
+        putchxy(x, y, 'o'); //desenha elas de novo
+
+    }
+    if(matriz_lab[y-3][x-3] == '*')
+    {
+        putchxy(x, y, '*');
+    }
+
+    if(matriz_lab[y-3][x-3] == ' ' || matriz_lab[y-3][x-3] == 'W')
+    {
+        putchxy(x, y, ' ');
+    }
 
     direcao_movimento_fantasma(cx, cy, direcao, matriz_lab);
 
@@ -174,7 +197,7 @@ void move_fantasma (int *cx, int *cy, char matriz_lab [LINHA_LAB][COLUNA_LAB])
 int testa_parede (int x, int y, char matriz_lab [LINHA_LAB][COLUNA_LAB])
 {
     if(x>103 || y>32 || x <= 2 || y <= 3 || matriz_lab[y-3][x-3] == '#')
-       return 0;
+        return 0;
 
     else
         return 1;
@@ -296,4 +319,9 @@ void printa_labirinto(char matriz_lab[LINHA_LAB][COLUNA_LAB])
             printf("%c", matriz_lab[linha][coluna]);
         }
     }
+}
+
+void conta_bolacha ()
+{
+
 }

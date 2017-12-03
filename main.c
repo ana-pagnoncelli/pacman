@@ -10,19 +10,14 @@
 int main ()
 {
     char matriz_lab [LINHA_LAB][COLUNA_LAB];
-    int direcao, coordX, coordY, direcaoT, cFx, cFy;
+    int direcao, direcaoT;
     int inicia_jogo;
     FANTASMA fantasma[NUM_FANTASMA];
     int linha,coluna, encontrado = 0;
     PACMAN jogador;
+    int bolachas_normais = 0, bolachas_especiais = 0;
 
     SetConsoleSize(120, 40);
-
-
-    coordX = 50;
-    coordY = 15;
-    cFx = 20;
-    cFy = 10;
 
     desenha_menu();
     entrada_jogo();
@@ -38,7 +33,6 @@ int main ()
         printa_labirinto(matriz_lab);
         gerador_fantasma(fantasma, matriz_lab);
         posicao_pacman(&jogador, matriz_lab);
-
         desenha_menu();
 
         do
@@ -54,7 +48,7 @@ int main ()
             move_pacman (&jogador, direcao, matriz_lab);
             Sleep (250);
         }
-        while(coordX !=0);
+        while(direcao !=600);
 
 
     }
