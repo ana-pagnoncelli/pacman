@@ -14,6 +14,7 @@ int main ()
     int inicia_jogo;
     FANTASMA fantasma[NUM_FANTASMA];
     int linha,coluna, encontrado = 0;
+    PACMAN jogador;
 
     SetConsoleSize(120, 40);
 
@@ -41,13 +42,13 @@ int main ()
 
         do
         {
-            /*movimenta_todos_fastasmas (fantasma);
+            movimenta_todos_fastasmas (fantasma);
             if(kbhit())
             {
                 direcaoT = traduz_teclas();
                 if(direcaoT != 9)
                     direcao = direcaoT;
-            }*/
+            }
             move_pacman (&coordX, &coordY, direcao);
             Sleep (250);
         }

@@ -57,9 +57,31 @@ int traduz_teclas ()
         return 9; //default
 }
 
-void move_pacman (int *cx, int *cy, int direcao)
+void move_pacman (int *cx, int *cy, int direcao, char matriz_lab[LINHA_LAB][COLUNA_LAB])
 {
     int xt = *cx, yt = *cy;
+
+    int linha = 0, coluna = 0, encontrado = 0;
+
+    while(encontrado < 5 && linha < LINHA_LAB)
+    {
+        while(encontrado < 5 && coluna < COLUNA_LAB)
+        {
+            if(matriz_lab[linha][coluna] == 'W')
+            {
+                fantasma[i].pos.x = coluna + 3;
+                fantasma[i].pos.y = linha + 3;
+                textbackground(RED);
+                putchxy(coluna + 3, linha + 3, 'W');
+                encontrado ++;
+                i++;
+            }
+            coluna ++;
+        }
+        coluna = 0;
+        linha ++;
+    }
+
 
     textbackground(BLACK);
     putchxy(*cx, *cy, ' ');
@@ -184,58 +206,29 @@ void direcao_movimento_fantasma (int *x, int *y, int direcao)
 void gerador_fantasma (FANTASMA fantasma[], char matriz_lab[LINHA_LAB][COLUNA_LAB])
 {
 
-    int linha = 0, coluna = 0, encontrado;
+    int linha = 0, coluna = 0, encontrado, i;
 
     encontrado = 0;
+    i = 0;
 
-    while(encontrado == 0 && linha < LINHA_LAB)
+    while(encontrado < 5 && linha < LINHA_LAB)
     {
-        while(encontrado == 0 && coluna < COLUNA_LAB)
+        while(encontrado < 5 && coluna < COLUNA_LAB)
         {
             if(matriz_lab[linha][coluna] == 'W')
             {
-                fantasma[0].pos.x = coluna + 3;
-                fantasma[0].pos.y = linha + 3;
+                fantasma[i].pos.x = coluna + 3;
+                fantasma[i].pos.y = linha + 3;
                 textbackground(RED);
                 putchxy(coluna + 3, linha + 3, 'W');
-                encontrado = 1;
-                printf("chegooou\nchegou\nchegou\chegouuuuuuuuuuuuuuuuuaoudua\nsausayn\nsahsias");
+                encontrado ++;
+                i++;
             }
             coluna ++;
         }
+        coluna = 0;
         linha ++;
     }
-    /* for(linha = 0; linha < LINHA_LAB; linha ++)
-     {
-         for(coluna = 0; coluna <COLUNA_LAB; coluna ++)
-         {
-             if(matriz_lab[linha][coluna] == 'W')
-             {
-                 fantasma[0].pos.x = coluna + 3;
-                 fantasma[0].pos.y = linha + 3;
-                 textbackground(RED);
-                 putchxy(coluna + 3, linha + 3, 'W');
-             }
-         }
-     }*/
-  /*  for(linha = linha; linha < LINHA_LAB; linha ++)
-    {
-        for(coluna = coluna; coluna <COLUNA_LAB; coluna ++)
-        {
-            if(matriz_lab[linha][coluna] == 'W')
-            {
-                fantasma[1].pos.x = coluna + 3;
-                fantasma[1].pos.y = linha + 3;
-            }
-        }
-    }*/
-
-    fantasma[2].pos.x = 35;
-    fantasma[2].pos.y = 10;
-    fantasma[3].pos.x = 55;
-    fantasma[3].pos.y = 15;
-    fantasma[4].pos.x = 75;
-    fantasma[4].pos.y = 20;
 
 }
 

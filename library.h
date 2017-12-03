@@ -25,10 +25,10 @@ typedef enum
 typedef struct
 {
     DIRECOES direcaoJog;
-    COORDENADA posicao;
+    COORDENADA pos;
     int vidas;
     int status;
-}JOGADOR;
+}PACMAN;
 
 typedef struct
 {
@@ -39,7 +39,7 @@ typedef struct
 void desenha_menu(); //funciona
 void entrada_jogo(); //funciona
 int traduz_teclas(); //funciona
-void move_pacman (int* cx, int*cy, int direcao); //funciona
+void move_pacman (int* cx, int*cy, int direcao, char matriz_lab[LINHA_LAB][COLUNA_LAB]); //funciona
 void SetConsoleSize(unsigned largura, unsigned altura); //funciona
 void move_fantasma (int *cx, int *cy); //funciona
 int testa_parede (int x, int y);
