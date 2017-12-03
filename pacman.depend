@@ -1,12 +1,12 @@
 # depslib dependency file v1.0
-1512281799 source:c:\users\acer\documents\github\pacman\main.c
+1512282123 source:c:\users\acer\documents\github\pacman\main.c
 	<stdio.h>
 	"library.h"
 	<conio2.h>
 	<windows.h>
 	<time.h>
 
-1512279772 c:\users\acer\documents\github\pacman\library.h
+1512282171 c:\users\acer\documents\github\pacman\library.h
 	<stdio.h>
 	<conio2.h>
 	<windows.h>

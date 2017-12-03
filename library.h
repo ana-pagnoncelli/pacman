@@ -41,11 +41,11 @@ void entrada_jogo(); //funciona
 int traduz_teclas(); //funciona
 void move_pacman (PACMAN *jogador, int direcao, char matriz_lab[LINHA_LAB][COLUNA_LAB]); //funciona
 void SetConsoleSize(unsigned largura, unsigned altura); //funciona
-void move_fantasma (int *cx, int *cy); //funciona
-int testa_parede (int x, int y);
-void direcao_movimento_fantasma (int *x, int *y, int direcao);
+void move_fantasma (int *cx, int *cy, char matriz_lab [LINHA_LAB][COLUNA_LAB]); //funciona
+int testa_parede (int x, int y, char matriz_lab [LINHA_LAB][COLUNA_LAB]);
+void direcao_movimento_fantasma (int *x, int *y, int direcao, char matriz_lab [LINHA_LAB][COLUNA_LAB]);
 void gerador_fantasma (FANTASMA fantasma[], char matriz_lab[LINHA_LAB][COLUNA_LAB]);
-void movimenta_todos_fastasmas (FANTASMA fantasma[]);
+void movimenta_todos_fastasmas (FANTASMA fantasma[], char matriz_lab [LINHA_LAB][COLUNA_LAB]);
 void le_labirinto (char matriz_lab[LINHA_LAB][COLUNA_LAB]);
 void printa_labirinto(char matriz_lab[LINHA_LAB][COLUNA_LAB]);
 void posicao_pacman(PACMAN *jogador, char matriz_lab[LINHA_LAB][COLUNA_LAB]);

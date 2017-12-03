@@ -5,6 +5,7 @@
 #include <time.h>
 #include <string.h>
 
+/*Basicamente desenha as bordas do menu. Sendo elas maiores que as dimensões do jogo.*/
 
 void desenha_menu()
 {
@@ -30,6 +31,9 @@ void desenha_menu()
 
 }
 
+/* Desenha uma entrada, onde vc tem a opcao de começar e futuramente as teclas de movimento
+o que cada uma faz, etc. */
+
 void entrada_jogo()
 {
     gotoxy(50, 15);
@@ -39,6 +43,9 @@ void entrada_jogo()
     textbackground(BLACK);
     textcolor(WHITE);
 }
+
+/*Recebe atraves do kbhit uma tecla e define o que ela significa,
+a principio serve só para a movimentação do pacman.*/
 
 int traduz_teclas ()
 {
@@ -56,6 +63,9 @@ int traduz_teclas ()
     else
         return 9; //default
 }
+
+/*Recebe um jogador e uma matriz, a partir disso procura na matriz a posicao em
+que o pacman(a letra 'C') se encontra e quando acha passa a posição para o jogador. */
 
 void posicao_pacman(PACMAN *jogador, char matriz_lab[LINHA_LAB][COLUNA_LAB])
 {
@@ -80,6 +90,12 @@ void posicao_pacman(PACMAN *jogador, char matriz_lab[LINHA_LAB][COLUNA_LAB])
     }
 
 }
+
+/*Recebe um jogador (para ter acesso as posicoes setadas no posicao_pacman e para modifica-lo
+atraves de ponteiros, para a proxima posicao), uma direção (recebida atraves do kbhit na main
+e traduzida pelo traduz_teclas) e a matriz (para passarmos para o testa parede para ver se na proxima
+posição do pacman vai ter parede ou nao). Basicamente vai excluindo o pacman da posicao antiga e
+desenhando na nova SE POSSIVEL.*/
 
 void move_pacman (PACMAN *jogador, int direcao, char matriz_lab[LINHA_LAB][COLUNA_LAB])
 {
@@ -107,7 +123,7 @@ void move_pacman (PACMAN *jogador, int direcao, char matriz_lab[LINHA_LAB][COLUN
         break;
     }
     textbackground(BLACK);
-    if(testa_parede(xt, yt) == 1)
+    if(testa_parede(xt, yt, matriz_lab) == 1)
     {
         jogador->pos.x = xt;
         jogador->pos.y = yt;
@@ -135,7 +151,7 @@ void SetConsoleSize(unsigned largura, unsigned altura) //aumenta tamanho da tela
 }
 
 
-void move_fantasma (int *cx, int *cy)
+void move_fantasma (int *cx, int *cy, char matriz_lab [LINHA_LAB][COLUNA_LAB])
 {
     int direcao;
 
@@ -145,7 +161,7 @@ void move_fantasma (int *cx, int *cy)
     textbackground(BLACK);
     putchxy(*cx, *cy, ' ');
 
-    direcao_movimento_fantasma(cx, cy, direcao);
+    direcao_movimento_fantasma(cx, cy, direcao, matriz_lab);
 
     textbackground(RED);
     putchxy(*cx, *cy, 'W');
@@ -155,17 +171,17 @@ void move_fantasma (int *cx, int *cy)
 
 
 
-int testa_parede (int x, int y)
+int testa_parede (int x, int y, char matriz_lab [LINHA_LAB][COLUNA_LAB])
 {
-    if(x>103 || y>32 || x <= 2 || y <= 3)
-        return 0;
+    if(x>103 || y>32 || x <= 2 || y <= 3 || matriz_lab[y][x] == '#')
+       return 0;
 
     else
         return 1;
 }
 
 
-void direcao_movimento_fantasma (int *x, int *y, int direcao)
+void direcao_movimento_fantasma (int *x, int *y, int direcao, char matriz_lab [LINHA_LAB][COLUNA_LAB])
 {
     int xt = *x, yt = *y;
 
@@ -184,7 +200,7 @@ void direcao_movimento_fantasma (int *x, int *y, int direcao)
         xt--;
         break;
     }
-    if(testa_parede(xt, yt) == 1)
+    if(testa_parede(xt, yt, matriz_lab) == 1)
     {
         *x = xt;
         *y = yt;
@@ -194,16 +210,16 @@ void direcao_movimento_fantasma (int *x, int *y, int direcao)
         switch(direcao)
         {
         case CIMA:
-            direcao_movimento_fantasma (x, y, DIREITA);
+            direcao_movimento_fantasma (x, y, DIREITA, matriz_lab);
             break;
         case DIREITA:
-            direcao_movimento_fantasma (x, y, BAIXO);
+            direcao_movimento_fantasma (x, y, BAIXO, matriz_lab);
             break;
         case BAIXO:
-            direcao_movimento_fantasma (x, y, ESQUERDA);
+            direcao_movimento_fantasma (x, y, ESQUERDA, matriz_lab);
             break;
         case ESQUERDA:
-            direcao_movimento_fantasma (x, y, CIMA);
+            direcao_movimento_fantasma (x, y, CIMA, matriz_lab);
             break;
         }
     }
@@ -238,14 +254,14 @@ void gerador_fantasma (FANTASMA fantasma[], char matriz_lab[LINHA_LAB][COLUNA_LA
 
 }
 
-void movimenta_todos_fastasmas (FANTASMA fantasma[])
+void movimenta_todos_fastasmas (FANTASMA fantasma[], char matriz_lab [LINHA_LAB][COLUNA_LAB])
 {
     int i;
     srand(time(NULL));
 
     for(i = 0; i<NUM_FANTASMA; i++)
     {
-        move_fantasma (&fantasma[i].pos.x, &fantasma[i].pos.y);
+        move_fantasma (&fantasma[i].pos.x, &fantasma[i].pos.y, matriz_lab);
     }
 }
 

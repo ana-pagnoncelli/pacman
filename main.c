@@ -43,7 +43,7 @@ int main ()
 
         do
         {
-            movimenta_todos_fastasmas (fantasma);
+            movimenta_todos_fastasmas (fantasma, matriz_lab);
 
             if(kbhit())
             {
