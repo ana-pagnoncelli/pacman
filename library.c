@@ -99,7 +99,7 @@ desenhando na nova SE POSSIVEL.*/
 
 void move_pacman (PACMAN *jogador, int direcao, char matriz_lab[LINHA_LAB][COLUNA_LAB])
 {
-    int xt, yt;
+    int xt, yt; //x e y temporarios.
 
     xt = jogador->pos.x;
     yt = jogador->pos.y;
@@ -107,9 +107,14 @@ void move_pacman (PACMAN *jogador, int direcao, char matriz_lab[LINHA_LAB][COLUN
     textbackground(BLACK);
 
 
-    if(matriz_lab[yt-3][xt-3] == 'o' || matriz_lab[yt-3][xt-3] == '*' ) //cada vez que come uma bolachinha poe um espaço branco na matriz
+    if(matriz_lab[yt-3][xt-3] == 'o') //cada vez que come uma bolachinha poe um espaço branco na matriz
     {
-       matriz_lab[yt-3][xt-3] = ' '; //senao o fantasma desenha de novo.
+        matriz_lab[yt-3][xt-3] = ' ';//senao o fantasma desenha de novo.
+    }
+
+    if(matriz_lab[yt-3][xt-3] == '*' )
+    {
+        matriz_lab[yt-3][xt-3] = ' ';
     }
 
     putchxy(jogador->pos.x, jogador->pos.y, ' ');
@@ -316,12 +321,101 @@ void printa_labirinto(char matriz_lab[LINHA_LAB][COLUNA_LAB])
         gotoxy(3, 3 + linha);
         for(coluna = 0; coluna < COLUNA_LAB; coluna ++)
         {
-            printf("%c", matriz_lab[linha][coluna]);
+            if(matriz_lab[linha][coluna] != 'W' && matriz_lab[linha][coluna] != 'C')
+            {
+                if(matriz_lab[linha][coluna] == '#')
+                {
+                    textcolor(BLUE);
+                }
+                printf("%c", matriz_lab[linha][coluna]);
+                textcolor(WHITE);
+            }
+            else
+            {
+                 matriz_lab[linha][coluna] = ' ';
+                 printf("%c", matriz_lab[linha][coluna]);
+            }
+
         }
     }
 }
 
-void conta_bolacha ()
+int conta_bolachas_normais (char matriz_lab[LINHA_LAB][COLUNA_LAB])
 {
+    int linha, coluna, bolachas_normais = 0;
+
+    for(linha = 0; linha < LINHA_LAB; linha ++)
+    {
+        for(coluna = 0; coluna < COLUNA_LAB; coluna ++)
+        {
+            if(matriz_lab[linha][coluna] == 'o');
+            bolachas_normais ++;
+        }
+    }
+
+    return bolachas_normais;
+}
+
+int conta_bolachas_especiais (char matriz_lab[LINHA_LAB][COLUNA_LAB])
+{
+    int linha, coluna, bolachas_especiais = 0;
+
+    for(linha = 0; linha < LINHA_LAB; linha ++)
+    {
+        for(coluna = 0; coluna < COLUNA_LAB; coluna ++)
+        {
+            if(matriz_lab[linha][coluna] == '*');
+            bolachas_especiais ++;
+        }
+    }
+
+    return bolachas_especiais;
+}
+
+void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char matriz_lab[LINHA_LAB][COLUNA_LAB])
+{
+    int i, continua_jogo = 0;
+
+    for(i = 0; i < NUM_FANTASMA; i++)
+    {
+        if(jogador -> pos.y == fantasma[i].pos.y && jogador -> pos.x == fantasma[i].pos.x)
+        {
+            system("cls");
+            jogador->vidas --;
+
+            if(jogador->vidas == 0)
+            {
+                game_over ();
+            }
+            else
+            {
+
+                gotoxy(50, 15);
+                textbackground(YELLOW);
+                textcolor(BLACK);
+                printf("VC MORREU. PRESS ENTER TO CONTINUE");
+                textbackground(BLACK);
+                textcolor(WHITE);
+
+                continua_jogo = getch();
+                if(continua_jogo == 13)
+                {
+                    desenha_menu();
+                    printa_labirinto(matriz_lab);
+                }
+            }
+        }
+    }
 
 }
+
+void game_over ()
+{
+    gotoxy(50, 15);
+    textbackground(YELLOW);
+    textcolor(BLACK);
+    printf("ACABOU");
+    textbackground(BLACK);
+    textcolor(WHITE);
+}
+

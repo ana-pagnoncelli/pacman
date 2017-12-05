@@ -17,6 +17,8 @@ int main ()
     PACMAN jogador;
     int bolachas_normais = 0, bolachas_especiais = 0;
 
+    jogador.vidas = 3;
+
     SetConsoleSize(120, 40);
 
     desenha_menu();
@@ -30,6 +32,8 @@ int main ()
         system("cls");
 
         le_labirinto(matriz_lab);
+        bolachas_normais = conta_bolachas_normais(matriz_lab);
+        bolachas_especiais = conta_bolachas_especiais(matriz_lab);
         printa_labirinto(matriz_lab);
         gerador_fantasma(fantasma, matriz_lab);
         posicao_pacman(&jogador, matriz_lab);
@@ -38,6 +42,7 @@ int main ()
         do
         {
             movimenta_todos_fastasmas (fantasma, matriz_lab);
+            testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
 
             if(kbhit())
             {
@@ -46,9 +51,11 @@ int main ()
                     direcao = direcaoT;
             }
             move_pacman (&jogador, direcao, matriz_lab);
-            Sleep (250);
+            testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
+
+            Sleep (300);
         }
-        while(direcao !=600);
+        while(jogador.vidas != 0);
 
 
     }
