@@ -61,8 +61,9 @@ int traduz_teclas ()
         return BAIXO; //2
     else if(tecla == 'A')
         return ESQUERDA; //3
-    else
-        return 9; //default
+    else if(tecla == 'X')
+        return PARA;
+    return 9; //default
 }
 
 /*Recebe um jogador e uma matriz, a partir disso procura na matriz a posicao em
@@ -98,65 +99,85 @@ e traduzida pelo traduz_teclas) e a matriz (para passarmos para o testa parede p
 posição do pacman vai ter parede ou nao). Basicamente vai excluindo o pacman da posicao antiga e
 desenhando na nova SE POSSIVEL.*/
 
-int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[LINHA_LAB][COLUNA_LAB])
+int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[LINHA_LAB][COLUNA_LAB], int *bolachas_especiais, int *bolachas_normais)
 {
     int xt, yt; //x e y temporarios.
-    int certo = 0;
+    int certo = 0, continua_jogo;
 
-    xt = jogador->pos.x;
-    yt = jogador->pos.y;
-
-    textbackground(BLACK);
-
-
-    if(matriz_lab[yt-3][xt-3] == 'o') //cada vez que come uma bolachinha poe um espaço branco na matriz
+    if(direcao == PARA)
     {
-        matriz_lab[yt-3][xt-3] = ' ';//senao o fantasma desenha de novo.
-        jogador->score = 10 + jogador->score;
-        gotoxy(12, 1);
-        textbackground(BLUE);
-        printf("%d", jogador->score);
+        textbackground(YELLOW);
+        putchxy(jogador->pos.x, jogador->pos.y, 'C');
         textbackground(BLACK);
-    }
-
-    if(matriz_lab[yt-3][xt-3] == '*' )
-    {
-        matriz_lab[yt-3][xt-3] = ' ';
-        jogador->score = 50 + jogador->score;
-        gotoxy(12, 1);
-        textbackground(BLUE);
-        printf("%d", jogador->score);
-        textbackground(BLACK);
-    }
-
-    switch(direcao)
-    {
-    case CIMA:
-        yt --;
-        break;
-    case DIREITA:
-        xt ++;
-        break;
-    case BAIXO:
-        yt++;
-        break;
-    case ESQUERDA:
-        xt--;
-        break;
-    }
-    textbackground(BLACK);
-
-    if(testa_parede(xt, yt, matriz_lab) == 1)
-    {
-        putchxy(jogador->pos.x, jogador->pos.y, ' ');
-        jogador->pos.x = xt;
-        jogador->pos.y = yt;
         certo = 1;
     }
 
-    textbackground(YELLOW);
-    putchxy(jogador->pos.x, jogador->pos.y, 'C');
-    textbackground(BLACK);
+    else
+    {
+        xt = jogador->pos.x;
+        yt = jogador->pos.y;
+
+        textbackground(BLACK);
+
+
+        if(matriz_lab[yt-3][xt-3] == 'o') //cada vez que come uma bolachinha poe um espaço branco na matriz
+        {
+            matriz_lab[yt-3][xt-3] = ' ';//senao o fantasma desenha de novo.
+            jogador->score = 10 + jogador->score;
+            gotoxy(12, 1);
+            textbackground(BLUE);
+            printf("%d", jogador->score);
+            textbackground(BLACK);
+            bolachas_normais --;
+        }
+
+        if(matriz_lab[yt-3][xt-3] == '*' )
+        {
+            matriz_lab[yt-3][xt-3] = ' ';
+            jogador->score = 50 + jogador->score;
+            gotoxy(12, 1);
+            textbackground(BLUE);
+            printf("%d", jogador->score);
+            textbackground(BLACK);
+            bolachas_especiais --;
+        }
+
+        if(bolachas_especiais == 0 && bolachas_normais == 0)
+        {
+            system("cls");
+            printf("vc ganhou, otario.");
+            continua_jogo = getch();
+        }
+
+        switch(direcao)
+        {
+        case CIMA:
+            yt --;
+            break;
+        case DIREITA:
+            xt ++;
+            break;
+        case BAIXO:
+            yt++;
+            break;
+        case ESQUERDA:
+            xt--;
+            break;
+        }
+        textbackground(BLACK);
+
+        if(testa_parede(xt, yt, matriz_lab) == 1)
+        {
+            putchxy(jogador->pos.x, jogador->pos.y, ' ');
+            jogador->pos.x = xt;
+            jogador->pos.y = yt;
+            certo = 1;
+        }
+
+        textbackground(YELLOW);
+        putchxy(jogador->pos.x, jogador->pos.y, 'C');
+        textbackground(BLACK);
+    }
 
     return certo;
 
@@ -182,10 +203,11 @@ void SetConsoleSize(unsigned largura, unsigned altura) //aumenta tamanho da tela
 
 void move_fantasma (int *cx, int *cy, char matriz_lab [LINHA_LAB][COLUNA_LAB])
 {
-    int direcao, x, y;
+    int direcao, x, y, sorteia_seguir;
 
     x = *cx ;
     y = *cy ;
+
 
     direcao = rand() %4 ;
 
@@ -309,6 +331,9 @@ void movimenta_todos_fastasmas (FANTASMA fantasma[], char matriz_lab [LINHA_LAB]
     }
 }
 
+/*
+Salva o labirinto.txt em em uma matriz.
+*/
 void le_labirinto (char matriz_lab[LINHA_LAB][COLUNA_LAB])
 {
     int linha, coluna;
@@ -328,6 +353,10 @@ void le_labirinto (char matriz_lab[LINHA_LAB][COLUNA_LAB])
 
     fclose(arq);
 }
+/*
+Printa o labirinto que foi salvo na matriz, ao mesmo tempo colorindo as paredes e bolachas e tirando os W e C da tela,
+para que quando a funcao for chamada novamente nao printe eles.
+*/
 void printa_labirinto(char matriz_lab[LINHA_LAB][COLUNA_LAB])
 {
     int linha, coluna;
@@ -341,7 +370,7 @@ void printa_labirinto(char matriz_lab[LINHA_LAB][COLUNA_LAB])
             {
                 if(matriz_lab[linha][coluna] == '#')
                 {
-                   textcolor(BLUE);
+                    textcolor(BLUE);
                 }
                 printf("%c", matriz_lab[linha][coluna]);
                 textcolor(WHITE);
@@ -357,6 +386,10 @@ void printa_labirinto(char matriz_lab[LINHA_LAB][COLUNA_LAB])
     }
 }
 
+/*
+Conta a quantidade de bolachas normais no mapa, passando um for pela matriz toda.
+Quando acaba, devolve o valor para a main.
+*/
 int conta_bolachas_normais (char matriz_lab[LINHA_LAB][COLUNA_LAB])
 {
     int linha, coluna, bolachas_normais = 0;
@@ -372,6 +405,11 @@ int conta_bolachas_normais (char matriz_lab[LINHA_LAB][COLUNA_LAB])
 
     return bolachas_normais;
 }
+
+/*
+Conta a quantidade de bolachas especiais no mapa, passando um for pela matriz toda.
+Quando acaba, devolve o valor para a main.
+*/
 
 int conta_bolachas_especiais (char matriz_lab[LINHA_LAB][COLUNA_LAB])
 {
@@ -389,22 +427,28 @@ int conta_bolachas_especiais (char matriz_lab[LINHA_LAB][COLUNA_LAB])
     return bolachas_especiais;
 }
 
+/*
+Recebe um jogador e os cinco fantasmas, testando um por um se estao na mesma posicao que o jogador.
+Caso estejam o pacman perde uma vida, aprecendo uma mensagem na tela. Se for a ultima vida do pacman, chama a função
+game_over e o while da função main fica falso, acabando o jogo. Se tiver ainda vidas, apertando enter vc continua
+partindo da posicao inicial, setada pela chamada da funcao posicao_pacman.
+*/
 void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char matriz_lab[LINHA_LAB][COLUNA_LAB])
 {
     int i, continua_jogo = 0;
 
     for(i = 0; i < NUM_FANTASMA; i++)
     {
-        if(jogador -> pos.y == fantasma[i].pos.y && jogador -> pos.x == fantasma[i].pos.x)
+        if(jogador -> pos.y == fantasma[i].pos.y && jogador -> pos.x == fantasma[i].pos.x) //testa se estao na mesma posicao
         {
             system("cls");
-            jogador->vidas --;
+            jogador->vidas --; //atualiza a quantidade de vidas
 
-            if(jogador->vidas == 0)
+            if(jogador->vidas == 0) //testa se era a ultima vida do pacman
             {
-                game_over ();
+                game_over (); //se era acabou o jogo
             }
-            else
+            else //senao continua
             {
 
                 gotoxy(50, 15);
@@ -419,7 +463,7 @@ void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char 
                 if(continua_jogo == 13)
                 {
                     printa_labirinto(matriz_lab);
-                    posicao_pacman(jogador, matriz_lab);
+                    posicao_pacman(jogador, matriz_lab); //seta o pacman na posicao inicial
                     textbackground(BLUE);
                     gotoxy(32, 1);
                     printf("%d", jogador->vidas);
@@ -436,7 +480,7 @@ void game_over ()
     gotoxy(50, 15);
     textbackground(YELLOW);
     textcolor(BLACK);
-    printf("ACABOU");
+    printf("ACABOU.");
     textbackground(BLACK);
     textcolor(WHITE);
 }

@@ -18,7 +18,8 @@ typedef enum
     CIMA,       // 0
     DIREITA,    // 1
     ESQUERDA,   // 2
-    BAIXO       // 3
+    BAIXO,       // 3
+    PARA        // 4
 } DIRECOES;
 
 
@@ -40,7 +41,7 @@ typedef struct
 void desenha_menu(); //funciona
 void entrada_jogo(); //funciona
 int traduz_teclas(); //funciona
-int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[LINHA_LAB][COLUNA_LAB]); //funciona
+int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[LINHA_LAB][COLUNA_LAB], int *bolachas_especiais, int *bolachas_normais); //funciona
 void SetConsoleSize(unsigned largura, unsigned altura); //funciona
 void move_fantasma (int *cx, int *cy, char matriz_lab [LINHA_LAB][COLUNA_LAB]); //funciona
 int testa_parede (int x, int y, char matriz_lab [LINHA_LAB][COLUNA_LAB]);
