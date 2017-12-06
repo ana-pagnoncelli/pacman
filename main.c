@@ -10,7 +10,7 @@
 int main ()
 {
     char matriz_lab [LINHA_LAB][COLUNA_LAB];
-    int direcao, direcaoT;
+    int direcao, direcaoT, direcaoAnt;
     int inicia_jogo;
     FANTASMA fantasma[NUM_FANTASMA];
     int linha,coluna, encontrado = 0;
@@ -50,10 +50,18 @@ int main ()
                 if(direcaoT != 9)
                     direcao = direcaoT;
             }
-            move_pacman (&jogador, direcao, matriz_lab);
+
+            if((move_pacman (&jogador, direcao, direcaoAnt, matriz_lab)) == 1)
+            {
+                direcaoAnt = direcao;
+            }
+            else
+            {
+            move_pacman(&jogador, direcaoAnt, direcao, matriz_lab);
+            }
             testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
 
-            Sleep (300);
+            Sleep (200);
         }
         while(jogador.vidas != 0);
 

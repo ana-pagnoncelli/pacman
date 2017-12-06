@@ -39,7 +39,7 @@ typedef struct
 void desenha_menu(); //funciona
 void entrada_jogo(); //funciona
 int traduz_teclas(); //funciona
-void move_pacman (PACMAN *jogador, int direcao, char matriz_lab[LINHA_LAB][COLUNA_LAB]); //funciona
+int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[LINHA_LAB][COLUNA_LAB]); //funciona
 void SetConsoleSize(unsigned largura, unsigned altura); //funciona
 void move_fantasma (int *cx, int *cy, char matriz_lab [LINHA_LAB][COLUNA_LAB]); //funciona
 int testa_parede (int x, int y, char matriz_lab [LINHA_LAB][COLUNA_LAB]);

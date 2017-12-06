@@ -97,9 +97,10 @@ e traduzida pelo traduz_teclas) e a matriz (para passarmos para o testa parede p
 posição do pacman vai ter parede ou nao). Basicamente vai excluindo o pacman da posicao antiga e
 desenhando na nova SE POSSIVEL.*/
 
-void move_pacman (PACMAN *jogador, int direcao, char matriz_lab[LINHA_LAB][COLUNA_LAB])
+int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[LINHA_LAB][COLUNA_LAB])
 {
     int xt, yt; //x e y temporarios.
+    int certo = 0;
 
     xt = jogador->pos.x;
     yt = jogador->pos.y;
@@ -117,8 +118,6 @@ void move_pacman (PACMAN *jogador, int direcao, char matriz_lab[LINHA_LAB][COLUN
         matriz_lab[yt-3][xt-3] = ' ';
     }
 
-    putchxy(jogador->pos.x, jogador->pos.y, ' ');
-
     switch(direcao)
     {
     case CIMA:
@@ -135,14 +134,25 @@ void move_pacman (PACMAN *jogador, int direcao, char matriz_lab[LINHA_LAB][COLUN
         break;
     }
     textbackground(BLACK);
+
     if(testa_parede(xt, yt, matriz_lab) == 1)
     {
+        putchxy(jogador->pos.x, jogador->pos.y, ' ');
         jogador->pos.x = xt;
         jogador->pos.y = yt;
+        certo = 1;
     }
+    else
+    {
+        //move_pacman(jogador, direcaoAnt, direcao, matriz_lab);
+    }
+
     textbackground(YELLOW);
     putchxy(jogador->pos.x, jogador->pos.y, 'C');
     textbackground(BLACK);
+
+    return certo;
+
 }
 
 void SetConsoleSize(unsigned largura, unsigned altura) //aumenta tamanho da tela, funcao do moodle
@@ -325,15 +335,16 @@ void printa_labirinto(char matriz_lab[LINHA_LAB][COLUNA_LAB])
             {
                 if(matriz_lab[linha][coluna] == '#')
                 {
-                    textcolor(BLUE);
+                   textcolor(BLUE);
                 }
                 printf("%c", matriz_lab[linha][coluna]);
                 textcolor(WHITE);
             }
             else
             {
-                 matriz_lab[linha][coluna] = ' ';
-                 printf("%c", matriz_lab[linha][coluna]);
+                textcolor(BLACK);
+                printf("%c", matriz_lab[linha][coluna]);
+                textcolor(WHITE);
             }
 
         }
@@ -393,15 +404,15 @@ void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char 
                 gotoxy(50, 15);
                 textbackground(YELLOW);
                 textcolor(BLACK);
-                printf("VC MORREU. PRESS ENTER TO CONTINUE");
+                printf("VC MORREU, TEM MAIS %d VIDAS.", jogador->vidas);
                 textbackground(BLACK);
                 textcolor(WHITE);
 
                 continua_jogo = getch();
                 if(continua_jogo == 13)
                 {
-                    desenha_menu();
                     printa_labirinto(matriz_lab);
+                    posicao_pacman(jogador, matriz_lab);
                 }
             }
         }
