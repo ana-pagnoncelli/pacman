@@ -142,12 +142,12 @@ int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[L
             bolachas_especiais --;
         }
 
-        if(bolachas_especiais == 0 && bolachas_normais == 0)
-        {
-            system("cls");
-            printf("vc ganhou, otario.");
-            continua_jogo = getch();
-        }
+        //if(bolachas_especiais == 0 && bolachas_normais == 0)
+       // {
+           // system("cls");
+         //   printf("vc ganhou, otario.");
+          //  continua_jogo = getch();
+        //}
 
         switch(direcao)
         {

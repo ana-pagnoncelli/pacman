@@ -2,12 +2,12 @@
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
 	<File name="library.c" open="1" top="1" tabpos="2">
-		<Cursor position="8154" topLine="72" />
+		<Cursor position="4178" topLine="135" />
 	</File>
 	<File name="library.h" open="1" top="0" tabpos="3">
-		<Cursor position="1700" topLine="29" />
+		<Cursor position="806" topLine="31" />
 	</File>
 	<File name="main.c" open="1" top="0" tabpos="1">
-		<Cursor position="1364" topLine="36" />
+		<Cursor position="889" topLine="27" />
 	</File>
 </CodeBlocks_layout_file>

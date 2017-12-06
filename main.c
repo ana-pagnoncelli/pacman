@@ -37,7 +37,7 @@ int main ()
         bolachas_normais = conta_bolachas_normais(matriz_lab);
         bolachas_especiais = conta_bolachas_especiais(matriz_lab);
         printa_labirinto(matriz_lab);
-        //gerador_fantasma(fantasma, matriz_lab);
+        gerador_fantasma(fantasma, matriz_lab);
         posicao_pacman(&jogador, matriz_lab);
         desenha_menu();
         gotoxy(32, 1);
@@ -47,8 +47,8 @@ int main ()
 
         do
         {
-            //movimenta_todos_fastasmas (fantasma, matriz_lab);
-            //testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
+            movimenta_todos_fastasmas (fantasma, matriz_lab);
+            testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
 
             if(kbhit())
             {
@@ -65,7 +65,7 @@ int main ()
             {
             move_pacman(&jogador, direcaoAnt, direcao, matriz_lab, &bolachas_especiais, &bolachas_normais);
             }
-            //testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
+            testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
 
             Sleep (100);
         }
