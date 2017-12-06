@@ -122,6 +122,11 @@ int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[L
     if(matriz_lab[yt-3][xt-3] == '*' )
     {
         matriz_lab[yt-3][xt-3] = ' ';
+        jogador->score = 50 + jogador->score;
+        gotoxy(12, 1);
+        textbackground(BLUE);
+        printf("%d", jogador->score);
+        textbackground(BLACK);
     }
 
     switch(direcao)
