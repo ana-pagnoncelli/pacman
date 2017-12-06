@@ -29,6 +29,7 @@ void desenha_menu()
     printf("Vidas:");
     textbackground(BLACK);
 
+
 }
 
 /* Desenha uma entrada, onde vc tem a opcao de começar e futuramente as teclas de movimento
@@ -111,6 +112,11 @@ int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[L
     if(matriz_lab[yt-3][xt-3] == 'o') //cada vez que come uma bolachinha poe um espaço branco na matriz
     {
         matriz_lab[yt-3][xt-3] = ' ';//senao o fantasma desenha de novo.
+        jogador->score = 10 + jogador->score;
+        gotoxy(12, 1);
+        textbackground(BLUE);
+        printf("%d", jogador->score);
+        textbackground(BLACK);
     }
 
     if(matriz_lab[yt-3][xt-3] == '*' )
@@ -141,10 +147,6 @@ int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[L
         jogador->pos.x = xt;
         jogador->pos.y = yt;
         certo = 1;
-    }
-    else
-    {
-        //move_pacman(jogador, direcaoAnt, direcao, matriz_lab);
     }
 
     textbackground(YELLOW);
@@ -206,7 +208,6 @@ void move_fantasma (int *cx, int *cy, char matriz_lab [LINHA_LAB][COLUNA_LAB])
     textbackground(BLACK);
 
 }
-
 
 
 int testa_parede (int x, int y, char matriz_lab [LINHA_LAB][COLUNA_LAB])
@@ -405,6 +406,7 @@ void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char 
                 textbackground(YELLOW);
                 textcolor(BLACK);
                 printf("VC MORREU, TEM MAIS %d VIDAS.", jogador->vidas);
+                desenha_menu();
                 textbackground(BLACK);
                 textcolor(WHITE);
 
@@ -413,6 +415,10 @@ void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char 
                 {
                     printa_labirinto(matriz_lab);
                     posicao_pacman(jogador, matriz_lab);
+                    textbackground(BLUE);
+                    gotoxy(32, 1);
+                    printf("%d", jogador->vidas);
+                    textbackground(BLACK);
                 }
             }
         }

@@ -17,7 +17,9 @@ int main ()
     PACMAN jogador;
     int bolachas_normais = 0, bolachas_especiais = 0;
 
-    jogador.vidas = 3;
+    jogador.vidas = 2;
+    jogador.score = 0;
+
 
     SetConsoleSize(120, 40);
 
@@ -38,6 +40,10 @@ int main ()
         gerador_fantasma(fantasma, matriz_lab);
         posicao_pacman(&jogador, matriz_lab);
         desenha_menu();
+        gotoxy(32, 1);
+        textbackground(BLUE);
+        printf("%d", jogador.vidas);
+        textbackground(BLACK);
 
         do
         {

@@ -28,6 +28,7 @@ typedef struct
     COORDENADA pos;
     int vidas;
     int status;
+    int score;
 }PACMAN;
 
 typedef struct
