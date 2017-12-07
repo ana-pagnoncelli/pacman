@@ -15,11 +15,21 @@ int main ()
     FANTASMA fantasma[NUM_FANTASMA];
     int linha,coluna, encontrado = 0;
     PACMAN jogador;
-    int bolachas_normais = 0, bolachas_especiais = 0;
+    int bolachas_normais = 0, bolachas_especiais = 0, i;
 
     jogador.vidas = 2;
     jogador.score = 0;
 
+/*
+Seto a posicao deles inicial para uma direcao qualquer,
+para que somente mude depois quando encontrarem um obstaculo.
+Se a primeira dada for um obstaculo ja muda.
+*/
+
+    for(i = 0; i <NUM_FANTASMA; i ++)
+    {
+        fantasma[i].dir_fant = 3;
+    }
 
     SetConsoleSize(120, 40);
 
@@ -67,7 +77,7 @@ int main ()
             }
             testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
 
-            Sleep (100);
+            Sleep (200);
         }
         while(jogador.vidas != 0);
 

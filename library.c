@@ -142,12 +142,12 @@ int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[L
             bolachas_especiais --;
         }
 
-        //if(bolachas_especiais == 0 && bolachas_normais == 0)
-       // {
-           // system("cls");
-         //   printf("vc ganhou, otario.");
-          //  continua_jogo = getch();
-        //}
+        if(bolachas_especiais == 0 && bolachas_normais == 0)
+       {
+           system("cls");
+           printf("vc ganhou, otario.");
+            continua_jogo = getch();
+        }
 
         switch(direcao)
         {
@@ -201,15 +201,15 @@ void SetConsoleSize(unsigned largura, unsigned altura) //aumenta tamanho da tela
 }
 
 
-void move_fantasma (int *cx, int *cy, char matriz_lab [LINHA_LAB][COLUNA_LAB])
+void move_fantasma (int *cx, int *cy, int *direcao, char matriz_lab [LINHA_LAB][COLUNA_LAB])
 {
-    int direcao, x, y, sorteia_seguir;
+    int x, y, sorteia_seguir;
 
     x = *cx ;
     y = *cy ;
 
 
-    direcao = rand() %4 ;
+
 
     textbackground(BLACK);
 
@@ -247,11 +247,11 @@ int testa_parede (int x, int y, char matriz_lab [LINHA_LAB][COLUNA_LAB])
 }
 
 
-void direcao_movimento_fantasma (int *x, int *y, int direcao, char matriz_lab [LINHA_LAB][COLUNA_LAB])
+int direcao_movimento_fantasma (int *x, int *y, int* direcao, char matriz_lab [LINHA_LAB][COLUNA_LAB])
 {
-    int xt = *x, yt = *y;
+    int xt = *x, yt = *y, certo = 0;
 
-    switch(direcao)
+    switch(*direcao)
     {
     case CIMA:
         yt --;
@@ -270,25 +270,14 @@ void direcao_movimento_fantasma (int *x, int *y, int direcao, char matriz_lab [L
     {
         *x = xt;
         *y = yt;
+        certo = 1;
     }
     else
     {
-        switch(direcao)
-        {
-        case CIMA:
-            direcao_movimento_fantasma (x, y, DIREITA, matriz_lab);
-            break;
-        case DIREITA:
-            direcao_movimento_fantasma (x, y, BAIXO, matriz_lab);
-            break;
-        case BAIXO:
-            direcao_movimento_fantasma (x, y, ESQUERDA, matriz_lab);
-            break;
-        case ESQUERDA:
-            direcao_movimento_fantasma (x, y, CIMA, matriz_lab);
-            break;
-        }
+    *direcao = rand() %4 ;
+    direcao_movimento_fantasma (x, y, direcao, matriz_lab);
     }
+    return certo;
 }
 
 void gerador_fantasma (FANTASMA fantasma[], char matriz_lab[LINHA_LAB][COLUNA_LAB])
@@ -327,7 +316,7 @@ void movimenta_todos_fastasmas (FANTASMA fantasma[], char matriz_lab [LINHA_LAB]
 
     for(i = 0; i<NUM_FANTASMA; i++)
     {
-        move_fantasma (&fantasma[i].pos.x, &fantasma[i].pos.y, matriz_lab);
+        move_fantasma (&fantasma[i].pos.x, &fantasma[i].pos.y, &fantasma[i].dir_fant, matriz_lab);
     }
 }
 
