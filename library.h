@@ -6,6 +6,7 @@
 #define BLUE 9
 #define LINHA_LAB 31
 #define COLUNA_LAB 101
+#include <math.h>
 
 typedef struct
 {
@@ -47,10 +48,11 @@ int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[L
 void SetConsoleSize(unsigned largura, unsigned altura); //funciona
 
 
-int direcao_movimento_fantasma (int *x, int *y, int *direcao, char matriz_lab [LINHA_LAB][COLUNA_LAB]);
-void move_fantasma (int *cx, int *cy, int *direcao, char matriz_lab [LINHA_LAB][COLUNA_LAB]); //funciona
+void direcao_movimento_fantasma (int *x, int *y, int *direcao, char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador);
+void move_fantasma (int *cx, int *cy, int *direcao, char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador); //funciona
 void gerador_fantasma (FANTASMA fantasma[], char matriz_lab[LINHA_LAB][COLUNA_LAB]);
-void movimenta_todos_fastasmas (FANTASMA fantasma[], char matriz_lab [LINHA_LAB][COLUNA_LAB]);
+void movimenta_todos_fastasmas (FANTASMA fantasma[], char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador);
+int calcula_menor_distancia(PACMAN *jogador, int* fant_x, int* fant_y);
 
 
 int testa_parede (int x, int y, char matriz_lab [LINHA_LAB][COLUNA_LAB]);

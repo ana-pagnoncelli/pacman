@@ -57,7 +57,7 @@ Se a primeira dada for um obstaculo ja muda.
 
         do
         {
-            movimenta_todos_fastasmas (fantasma, matriz_lab);
+            movimenta_todos_fastasmas (fantasma, matriz_lab, &jogador);
             testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
 
             if(kbhit())
@@ -77,7 +77,7 @@ Se a primeira dada for um obstaculo ja muda.
             }
             testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
 
-            Sleep (200);
+            Sleep (300);
         }
         while(jogador.vidas != 0);
 

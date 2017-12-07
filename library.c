@@ -201,9 +201,9 @@ void SetConsoleSize(unsigned largura, unsigned altura) //aumenta tamanho da tela
 }
 
 
-void move_fantasma (int *cx, int *cy, int *direcao, char matriz_lab [LINHA_LAB][COLUNA_LAB])
+void move_fantasma (int *cx, int *cy, int *direcao, char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador)
 {
-    int x, y, sorteia_seguir;
+    int x, y;
 
     x = *cx ;
     y = *cy ;
@@ -228,7 +228,7 @@ void move_fantasma (int *cx, int *cy, int *direcao, char matriz_lab [LINHA_LAB][
         putchxy(x, y, ' ');
     }
 
-    direcao_movimento_fantasma(cx, cy, direcao, matriz_lab);
+    direcao_movimento_fantasma(cx, cy, direcao, matriz_lab, jogador);
 
     textbackground(RED);
     putchxy(*cx, *cy, 'W');
@@ -247,9 +247,9 @@ int testa_parede (int x, int y, char matriz_lab [LINHA_LAB][COLUNA_LAB])
 }
 
 
-int direcao_movimento_fantasma (int *x, int *y, int* direcao, char matriz_lab [LINHA_LAB][COLUNA_LAB])
+void direcao_movimento_fantasma (int *x, int *y, int* direcao, char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador)
 {
-    int xt = *x, yt = *y, certo = 0;
+    int xt = *x, yt = *y, sorteia_decisao;
 
     switch(*direcao)
     {
@@ -266,18 +266,72 @@ int direcao_movimento_fantasma (int *x, int *y, int* direcao, char matriz_lab [L
         xt--;
         break;
     }
-    if(testa_parede(xt, yt, matriz_lab) == 1)
+    if(testa_parede(xt, yt, matriz_lab) == 1)//so pode entrar aqui quando esse teste der true, e o de outra direçao existente, q seja contraria a essa tbm
     {
         *x = xt;
         *y = yt;
-        certo = 1;
+    }
+    else //so sorteia uma nova direcao pro fantasma se tiver uma parede ou uma bifurcação
+    {
+    sorteia_decisao = rand() %2;
+    if(sorteia_decisao == 0)
+    {
+       *direcao = rand() %4 ;
     }
     else
     {
-    *direcao = rand() %4 ;
-    direcao_movimento_fantasma (x, y, direcao, matriz_lab);
+        *direcao = calcula_menor_distancia(jogador, x, y);
     }
-    return certo;
+
+    direcao_movimento_fantasma (x, y, direcao, matriz_lab, jogador);
+    }
+}
+
+int calcula_menor_distancia(PACMAN *jogador, int* fant_x, int* fant_y)
+{
+    int direcao;
+    float distancia;
+    int xt, yt; //TEMPORARIOS PORRA.
+
+    xt = fant_x;
+    yt = fant_y;
+
+
+    direcao = CIMA;
+    fant_y --; //tenta calcular CIMA, ja supondo que e a menor
+    distancia = (sqrt ((pow((jogador->pos.x - xt), 2)) - (pow((jogador->pos.y - yt), 2))));
+
+    yt ++;//retorna ao original pra testar a proxima direcao
+
+    xt ++; //tenta calcular DIREITA, ver se é menor que CIMA.
+
+    if(distancia > (sqrt ((pow((jogador->pos.x - xt), 2)) - (pow((jogador->pos.y - yt), 2)))))
+    {
+        distancia = (sqrt ((pow((jogador->pos.x - xt), 2)) - (pow((jogador->pos.y - yt), 2))));
+        direcao = DIREITA;
+    }
+
+    xt --; //retorna ao original novamente pra testar a proxima
+
+    yt ++; //tenta ver se BAIXO, é menor que os anteriores
+
+    if(distancia > (sqrt ((pow((jogador->pos.x - xt), 2)) - (pow((jogador->pos.y - yt), 2)))))
+    {
+        distancia = (sqrt ((pow((jogador->pos.x - xt), 2)) - (pow((jogador->pos.y - yt), 2))));
+        direcao = BAIXO;
+    }
+
+    yt --; //retorna ao valor original novamente para testar a ultima
+
+    xt --; //testa se a ESQUERDA é a menor que as anteriores
+
+    if(distancia > (sqrt ((pow((jogador->pos.x - xt), 2)) - (pow((jogador->pos.y - yt), 2)))))
+    {
+        distancia = (sqrt ((pow((jogador->pos.x - xt), 2)) - (pow((jogador->pos.y - yt), 2))));
+        direcao = ESQUERDA;
+    }
+
+    return direcao; //retorna a direcao final.
 }
 
 void gerador_fantasma (FANTASMA fantasma[], char matriz_lab[LINHA_LAB][COLUNA_LAB])
@@ -309,14 +363,14 @@ void gerador_fantasma (FANTASMA fantasma[], char matriz_lab[LINHA_LAB][COLUNA_LA
 
 }
 
-void movimenta_todos_fastasmas (FANTASMA fantasma[], char matriz_lab [LINHA_LAB][COLUNA_LAB])
+void movimenta_todos_fastasmas (FANTASMA fantasma[], char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador)
 {
     int i;
     srand(time(NULL));
 
     for(i = 0; i<NUM_FANTASMA; i++)
     {
-        move_fantasma (&fantasma[i].pos.x, &fantasma[i].pos.y, &fantasma[i].dir_fant, matriz_lab);
+        move_fantasma (&fantasma[i].pos.x, &fantasma[i].pos.y, &fantasma[i].dir_fant, matriz_lab, jogador);
     }
 }
 
