@@ -58,6 +58,7 @@ float calculo_da_distancia(int x_pac, int y_pac, int x_fant, int y_fant);
 
 
 int testa_parede (int x, int y, char matriz_lab [LINHA_LAB][COLUNA_LAB]);
+int testa_bifurcacao (int dir_fant, int xt, int yt, char matriz_lab [LINHA_LAB][COLUNA_LAB]);
 
 
 

@@ -159,34 +159,39 @@ void atualiza_jogo (PACMAN *jogador, char matriz_lab [LINHA_LAB][COLUNA_LAB], in
 {
     int continua_jogo;
 
+    if (jogador->pos.y - 3 >= LINHA_LAB || jogador->pos.y - 3 < 0 || jogador->pos.x - 3>= COLUNA_LAB || jogador->pos.x - 3 < 0)
+    {
+        return;
+    }
+
     if(matriz_lab[jogador->pos.y - 3][jogador->pos.x - 3] == 'o') //cada vez que come uma bolachinha poe um espaço branco na matriz
-        {
-            matriz_lab[jogador->pos.y - 3][jogador->pos.x - 3] = ' ';//senao o fantasma desenha de novo.
-            jogador->score = 10 + jogador->score;
-            gotoxy(12, 1);
-            textbackground(BLUE);
-            printf("%d", jogador->score);
-            textbackground(BLACK);
-            bolachas_normais --;
-        }
+    {
+        matriz_lab[jogador->pos.y - 3][jogador->pos.x - 3] = ' ';//senao o fantasma desenha de novo.
+        jogador->score = 10 + jogador->score;
+        gotoxy(12, 1);
+        textbackground(BLUE);
+        printf("%d", jogador->score);
+        textbackground(BLACK);
+        bolachas_normais --;
+    }
 
-        if(matriz_lab[jogador->pos.y - 3][jogador->pos.x - 3] == '*' )
-        {
-            matriz_lab[jogador->pos.y - 3][jogador->pos.x - 3] = ' ';
-            jogador->score = 50 + jogador->score;
-            gotoxy(12, 1);
-            textbackground(BLUE);
-            printf("%d", jogador->score);
-            textbackground(BLACK);
-            bolachas_especiais --;
-        }
+    if(matriz_lab[jogador->pos.y - 3][jogador->pos.x - 3] == '*' )
+    {
+        matriz_lab[jogador->pos.y - 3][jogador->pos.x - 3] = ' ';
+        jogador->score = 50 + jogador->score;
+        gotoxy(12, 1);
+        textbackground(BLUE);
+        printf("%d", jogador->score);
+        textbackground(BLACK);
+        bolachas_especiais --;
+    }
 
-        if(bolachas_especiais == 0 && bolachas_normais == 0)
-       {
-           system("cls");
-           printf("vc ganhou, otario.");
-            continua_jogo = getch();
-        }
+    if(bolachas_especiais == 0 && bolachas_normais == 0)
+    {
+        system("cls");
+        printf("vc ganhou, otario.");
+        continua_jogo = getch();
+    }
 }
 
 void SetConsoleSize(unsigned largura, unsigned altura) //aumenta tamanho da tela, funcao do moodle
@@ -214,11 +219,11 @@ void move_fantasma (FANTASMA *fantasma, char matriz_lab [LINHA_LAB][COLUNA_LAB],
     x = fantasma->pos.x ;
     y = fantasma->pos.y;
 
-
-
-
     textbackground(BLACK);
-
+    if (y-3 >= LINHA_LAB || y-3 < 0 || x-3>= COLUNA_LAB || x-3 < 0)
+    {
+        return;
+    }
     if(matriz_lab[y-3][x-3] == 'o' ) //quando o fantasma passa por cima dos espaços q contem bolachinhas
     {
         putchxy(x, y, 'o'); //desenha elas de novo
@@ -255,41 +260,109 @@ int testa_parede (int x, int y, char matriz_lab [LINHA_LAB][COLUNA_LAB])
 
 void direcao_movimento_fantasma (FANTASMA *fantasma, char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador)
 {
-    int xt = fantasma->pos.x, yt = fantasma->pos.y, sorteia_decisao;
+    int xt = fantasma->pos.x, yt = fantasma->pos.y, sorteia_decisao, move = 0;
 
-    switch(fantasma->dir_fant)
+    while(move == 0)
     {
-    case CIMA:
-        yt --;
-        break;
-    case DIREITA:
-        xt ++;
-        break;
-    case BAIXO:
-        yt++;
-        break;
-    case ESQUERDA:
-        xt--;
-        break;
+xt = fantasma->pos.x, yt = fantasma->pos.y;
+        if (testa_bifurcacao (fantasma->dir_fant, fantasma->pos.x, fantasma->pos.y, matriz_lab) == 1)
+        {
+            sorteia_decisao = rand() %2;
+
+            if(sorteia_decisao == 0)
+            {
+                fantasma->dir_fant = fantasma->dir_fant = calcula_menor_distancia(jogador, fantasma);
+            }
+            else
+            {
+                fantasma->dir_fant = rand() %4 ;
+            }
+        }
+
+        switch(fantasma->dir_fant)
+        {
+        case CIMA:
+            yt --;
+            break;
+        case DIREITA:
+            xt ++;
+            break;
+        case BAIXO:
+            yt++;
+            break;
+        case ESQUERDA:
+            xt--;
+            break;
+        }
+
+        if(((testa_parede(xt, yt, matriz_lab)) == 1))//so pode entrar aqui quando esse teste der true, e o de outra direçao existente, q seja contraria a essa tbm
+        {
+            fantasma->pos.x = xt;
+            fantasma->pos.y = yt;
+            move = 1;
+        }
+        else //so sorteia uma nova direcao pro fantasma se tiver uma parede
+        {
+            sorteia_decisao = rand() %2;
+            if(sorteia_decisao == 0)
+            {
+                fantasma->dir_fant = rand() %4 ;
+            }
+            else
+            {
+                fantasma->dir_fant = calcula_menor_distancia(jogador, fantasma);
+            }
+        }
     }
-    if(testa_parede(xt, yt, matriz_lab) == 1)//so pode entrar aqui quando esse teste der true, e o de outra direçao existente, q seja contraria a essa tbm
+}
+
+
+int testa_bifurcacao (int dir_fant, int xt, int yt, char matriz_lab [LINHA_LAB][COLUNA_LAB])
+{
+    int num_caminhos = 0;
+
+    xt ++; //testa se para a direita tem bifurcacao.
+
+    if((testa_parede(xt, yt, matriz_lab)) == 1)
     {
-        fantasma->pos.x = xt;
-        fantasma->pos.y = yt;
+        num_caminhos ++; //se entrou aqui quer dizer que nao tem parede, entao retorna que tem true para bifurcacao
     }
-    else //so sorteia uma nova direcao pro fantasma se tiver uma parede ou uma bifurcação
+
+    xt --; // volta original
+
+    xt --; //testa se para a esquerda tem bifurcacao.
+    if((testa_parede(xt, yt, matriz_lab)) == 1)
     {
-    sorteia_decisao = rand() %2;
-    if(sorteia_decisao == 0)
+        num_caminhos ++;
+    }
+    xt++; //volta para a original novamente
+
+
+    yt --; //testa se para cima tem bifurcacao
+
+    if((testa_parede(xt, yt, matriz_lab)) == 1)
     {
-       fantasma->dir_fant = rand() %4 ;
+        num_caminhos ++;
+    }
+
+    yt ++; //volta ao original
+
+    yt --; //testa se para baixo tem bifurcacao
+
+    if((testa_parede(xt, yt, matriz_lab)) == 1)
+    {
+        num_caminhos ++;
+    }
+
+    yt ++;//volta ao original
+
+    if(num_caminhos>2)
+    {
+        return 1;
     }
     else
     {
-        fantasma->dir_fant = calcula_menor_distancia(jogador, fantasma);
-    }
-
-    direcao_movimento_fantasma (fantasma, matriz_lab, jogador);
+        return 0;
     }
 }
 
@@ -396,6 +469,10 @@ void le_labirinto (char matriz_lab[LINHA_LAB][COLUNA_LAB])
     FILE* arq;
 
     arq = fopen("labirinto.txt", "r");
+    if(arq == NULL)
+    {
+        return;
+    }
 
     for(linha = 0; linha < LINHA_LAB; linha ++)
     {
