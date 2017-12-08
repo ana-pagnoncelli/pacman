@@ -102,7 +102,7 @@ desenhando na nova SE POSSIVEL.*/
 int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[LINHA_LAB][COLUNA_LAB], int *bolachas_especiais, int *bolachas_normais)
 {
     int xt, yt; //x e y temporarios.
-    int certo = 0, continua_jogo;
+    int certo = 0;
 
     if(direcao == PARA)
     {
@@ -119,35 +119,7 @@ int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[L
 
         textbackground(BLACK);
 
-
-        if(matriz_lab[yt-3][xt-3] == 'o') //cada vez que come uma bolachinha poe um espaço branco na matriz
-        {
-            matriz_lab[yt-3][xt-3] = ' ';//senao o fantasma desenha de novo.
-            jogador->score = 10 + jogador->score;
-            gotoxy(12, 1);
-            textbackground(BLUE);
-            printf("%d", jogador->score);
-            textbackground(BLACK);
-            bolachas_normais --;
-        }
-
-        if(matriz_lab[yt-3][xt-3] == '*' )
-        {
-            matriz_lab[yt-3][xt-3] = ' ';
-            jogador->score = 50 + jogador->score;
-            gotoxy(12, 1);
-            textbackground(BLUE);
-            printf("%d", jogador->score);
-            textbackground(BLACK);
-            bolachas_especiais --;
-        }
-
-        if(bolachas_especiais == 0 && bolachas_normais == 0)
-       {
-           system("cls");
-           printf("vc ganhou, otario.");
-            continua_jogo = getch();
-        }
+        atualiza_jogo (jogador, matriz_lab, bolachas_normais, bolachas_especiais);
 
         switch(direcao)
         {
@@ -178,9 +150,43 @@ int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[L
         putchxy(jogador->pos.x, jogador->pos.y, 'C');
         textbackground(BLACK);
     }
-
+    gotoxy(1,1);
     return certo;
 
+}
+
+void atualiza_jogo (PACMAN *jogador, char matriz_lab [LINHA_LAB][COLUNA_LAB], int *bolachas_normais, int *bolachas_especiais)
+{
+    int continua_jogo;
+
+    if(matriz_lab[jogador->pos.y - 3][jogador->pos.x - 3] == 'o') //cada vez que come uma bolachinha poe um espaço branco na matriz
+        {
+            matriz_lab[jogador->pos.y - 3][jogador->pos.x - 3] = ' ';//senao o fantasma desenha de novo.
+            jogador->score = 10 + jogador->score;
+            gotoxy(12, 1);
+            textbackground(BLUE);
+            printf("%d", jogador->score);
+            textbackground(BLACK);
+            bolachas_normais --;
+        }
+
+        if(matriz_lab[jogador->pos.y - 3][jogador->pos.x - 3] == '*' )
+        {
+            matriz_lab[jogador->pos.y - 3][jogador->pos.x - 3] = ' ';
+            jogador->score = 50 + jogador->score;
+            gotoxy(12, 1);
+            textbackground(BLUE);
+            printf("%d", jogador->score);
+            textbackground(BLACK);
+            bolachas_especiais --;
+        }
+
+        if(bolachas_especiais == 0 && bolachas_normais == 0)
+       {
+           system("cls");
+           printf("vc ganhou, otario.");
+            continua_jogo = getch();
+        }
 }
 
 void SetConsoleSize(unsigned largura, unsigned altura) //aumenta tamanho da tela, funcao do moodle
@@ -201,12 +207,12 @@ void SetConsoleSize(unsigned largura, unsigned altura) //aumenta tamanho da tela
 }
 
 
-void move_fantasma (int *cx, int *cy, int *direcao, char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador)
+void move_fantasma (FANTASMA *fantasma, char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador)
 {
     int x, y;
 
-    x = *cx ;
-    y = *cy ;
+    x = fantasma->pos.x ;
+    y = fantasma->pos.y;
 
 
 
@@ -228,10 +234,10 @@ void move_fantasma (int *cx, int *cy, int *direcao, char matriz_lab [LINHA_LAB][
         putchxy(x, y, ' ');
     }
 
-    direcao_movimento_fantasma(cx, cy, direcao, matriz_lab, jogador);
+    direcao_movimento_fantasma(fantasma, matriz_lab, jogador);
 
     textbackground(RED);
-    putchxy(*cx, *cy, 'W');
+    putchxy(fantasma->pos.x, fantasma->pos.y, 'W');
     textbackground(BLACK);
 
 }
@@ -247,11 +253,11 @@ int testa_parede (int x, int y, char matriz_lab [LINHA_LAB][COLUNA_LAB])
 }
 
 
-void direcao_movimento_fantasma (int *x, int *y, int* direcao, char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador)
+void direcao_movimento_fantasma (FANTASMA *fantasma, char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador)
 {
-    int xt = *x, yt = *y, sorteia_decisao;
+    int xt = fantasma->pos.x, yt = fantasma->pos.y, sorteia_decisao;
 
-    switch(*direcao)
+    switch(fantasma->dir_fant)
     {
     case CIMA:
         yt --;
@@ -268,68 +274,75 @@ void direcao_movimento_fantasma (int *x, int *y, int* direcao, char matriz_lab [
     }
     if(testa_parede(xt, yt, matriz_lab) == 1)//so pode entrar aqui quando esse teste der true, e o de outra direçao existente, q seja contraria a essa tbm
     {
-        *x = xt;
-        *y = yt;
+        fantasma->pos.x = xt;
+        fantasma->pos.y = yt;
     }
     else //so sorteia uma nova direcao pro fantasma se tiver uma parede ou uma bifurcação
     {
     sorteia_decisao = rand() %2;
     if(sorteia_decisao == 0)
     {
-       *direcao = rand() %4 ;
+       fantasma->dir_fant = rand() %4 ;
     }
     else
     {
-        *direcao = calcula_menor_distancia(jogador, x, y);
+        fantasma->dir_fant = calcula_menor_distancia(jogador, fantasma);
     }
 
-    direcao_movimento_fantasma (x, y, direcao, matriz_lab, jogador);
+    direcao_movimento_fantasma (fantasma, matriz_lab, jogador);
     }
 }
 
-int calcula_menor_distancia(PACMAN *jogador, int* fant_x, int* fant_y)
+float calculo_da_distancia(int x_pac, int y_pac, int x_fant, int y_fant)
+{
+    float resultado;
+
+    resultado = (sqrt ((pow((x_pac - x_fant), 2)) - (pow((y_pac - y_fant), 2))));
+
+    return resultado;
+}
+
+int calcula_menor_distancia(PACMAN *jogador, FANTASMA *fantasma)
 {
     int direcao;
     float distancia;
-    int xt, yt; //TEMPORARIOS PORRA.
-
-    xt = fant_x;
-    yt = fant_y;
 
 
     direcao = CIMA;
-    fant_y --; //tenta calcular CIMA, ja supondo que e a menor
-    distancia = (sqrt ((pow((jogador->pos.x - xt), 2)) - (pow((jogador->pos.y - yt), 2))));
+    fantasma->pos.y --; //tenta calcular CIMA, ja supondo que e a menor
+    distancia = calculo_da_distancia(jogador->pos.x, jogador->pos.y, fantasma->pos.x, fantasma->pos.y );
 
-    yt ++;//retorna ao original pra testar a proxima direcao
+    fantasma->pos.y ++;//retorna ao original pra testar a proxima direcao
 
-    xt ++; //tenta calcular DIREITA, ver se é menor que CIMA.
+    fantasma->pos.x++; //tenta calcular DIREITA, ver se é menor que CIMA.
 
-    if(distancia > (sqrt ((pow((jogador->pos.x - xt), 2)) - (pow((jogador->pos.y - yt), 2)))))
+    if(distancia > calculo_da_distancia(jogador->pos.x, jogador->pos.y, fantasma->pos.x, fantasma->pos.y ))
     {
-        distancia = (sqrt ((pow((jogador->pos.x - xt), 2)) - (pow((jogador->pos.y - yt), 2))));
+        distancia = calculo_da_distancia(jogador->pos.x, jogador->pos.y, fantasma->pos.x, fantasma->pos.y );
         direcao = DIREITA;
     }
 
-    xt --; //retorna ao original novamente pra testar a proxima
+    fantasma->pos.x --; //retorna ao original novamente pra testar a proxima
 
-    yt ++; //tenta ver se BAIXO, é menor que os anteriores
+    fantasma->pos.y ++; //tenta ver se BAIXO, é menor que os anteriores
 
-    if(distancia > (sqrt ((pow((jogador->pos.x - xt), 2)) - (pow((jogador->pos.y - yt), 2)))))
+    if(distancia > calculo_da_distancia(jogador->pos.x, jogador->pos.y, fantasma->pos.x, fantasma->pos.y ))
     {
-        distancia = (sqrt ((pow((jogador->pos.x - xt), 2)) - (pow((jogador->pos.y - yt), 2))));
+        distancia = calculo_da_distancia(jogador->pos.x, jogador->pos.y, fantasma->pos.x, fantasma->pos.y );
         direcao = BAIXO;
     }
 
-    yt --; //retorna ao valor original novamente para testar a ultima
+    fantasma->pos.y --; //retorna ao valor original novamente para testar a ultima
 
-    xt --; //testa se a ESQUERDA é a menor que as anteriores
+    fantasma->pos.x --; //testa se a ESQUERDA é a menor que as anteriores
 
-    if(distancia > (sqrt ((pow((jogador->pos.x - xt), 2)) - (pow((jogador->pos.y - yt), 2)))))
+    if(distancia > calculo_da_distancia(jogador->pos.x, jogador->pos.y, fantasma->pos.x, fantasma->pos.y ))
     {
-        distancia = (sqrt ((pow((jogador->pos.x - xt), 2)) - (pow((jogador->pos.y - yt), 2))));
+        distancia = calculo_da_distancia(jogador->pos.x, jogador->pos.y, fantasma->pos.x, fantasma->pos.y );
         direcao = ESQUERDA;
     }
+
+    fantasma->pos.x ++;
 
     return direcao; //retorna a direcao final.
 }
@@ -370,7 +383,7 @@ void movimenta_todos_fastasmas (FANTASMA fantasma[], char matriz_lab [LINHA_LAB]
 
     for(i = 0; i<NUM_FANTASMA; i++)
     {
-        move_fantasma (&fantasma[i].pos.x, &fantasma[i].pos.y, &fantasma[i].dir_fant, matriz_lab, jogador);
+        move_fantasma (&fantasma[i], matriz_lab, jogador);
     }
 }
 

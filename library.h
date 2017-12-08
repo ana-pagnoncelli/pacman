@@ -45,14 +45,16 @@ void entrada_jogo(); //funciona
 int traduz_teclas(); //funciona
 
 int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[LINHA_LAB][COLUNA_LAB], int *bolachas_especiais, int *bolachas_normais); //funciona
+void atualiza_jogo (PACMAN *jogador, char matriz_lab [LINHA_LAB][COLUNA_LAB], int *bolachas_normais, int *bolachas_especiais);
 void SetConsoleSize(unsigned largura, unsigned altura); //funciona
 
 
-void direcao_movimento_fantasma (int *x, int *y, int *direcao, char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador);
-void move_fantasma (int *cx, int *cy, int *direcao, char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador); //funciona
+void direcao_movimento_fantasma (FANTASMA *fantasma, char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador);
+void move_fantasma (FANTASMA *fantasma, char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador); //funciona
 void gerador_fantasma (FANTASMA fantasma[], char matriz_lab[LINHA_LAB][COLUNA_LAB]);
 void movimenta_todos_fastasmas (FANTASMA fantasma[], char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador);
-int calcula_menor_distancia(PACMAN *jogador, int* fant_x, int* fant_y);
+int calcula_menor_distancia(PACMAN *jogador, FANTASMA *fantasma);
+float calculo_da_distancia(int x_pac, int y_pac, int x_fant, int y_fant);
 
 
 int testa_parede (int x, int y, char matriz_lab [LINHA_LAB][COLUNA_LAB]);
