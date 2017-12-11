@@ -7,6 +7,7 @@
 #define LINHA_LAB 31
 #define COLUNA_LAB 101
 #include <math.h>
+#define PROBDIRECAOFANTASMA 50
 
 typedef struct
 {
@@ -29,7 +30,7 @@ typedef struct
     DIRECOES direcaoJog;
     COORDENADA pos;
     int vidas;
-    int status;
+    int poder; // 1 == ativado - 0 == desativado
     int score;
 }PACMAN;
 
@@ -44,8 +45,8 @@ void desenha_menu(); //funciona
 void entrada_jogo(); //funciona
 int traduz_teclas(); //funciona
 
-int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[LINHA_LAB][COLUNA_LAB], int *bolachas_especiais, int *bolachas_normais); //funciona
-void atualiza_jogo (PACMAN *jogador, char matriz_lab [LINHA_LAB][COLUNA_LAB], int *bolachas_normais, int *bolachas_especiais);
+int move_pacman (FANTASMA fantasma [], PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[LINHA_LAB][COLUNA_LAB], int *bolachas_especiais, int *bolachas_normais); //funciona
+void atualiza_jogo (FANTASMA fantasma [], PACMAN *jogador, char matriz_lab [LINHA_LAB][COLUNA_LAB], int *bolachas_normais, int *bolachas_especiais, int direcao);
 void SetConsoleSize(unsigned largura, unsigned altura); //funciona
 
 

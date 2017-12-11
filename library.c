@@ -99,7 +99,7 @@ e traduzida pelo traduz_teclas) e a matriz (para passarmos para o testa parede p
 posição do pacman vai ter parede ou nao). Basicamente vai excluindo o pacman da posicao antiga e
 desenhando na nova SE POSSIVEL.*/
 
-int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[LINHA_LAB][COLUNA_LAB], int *bolachas_especiais, int *bolachas_normais)
+int move_pacman (FANTASMA fantasma [], PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[LINHA_LAB][COLUNA_LAB], int *bolachas_especiais, int *bolachas_normais)
 {
     int xt, yt; //x e y temporarios.
     int certo = 0;
@@ -119,7 +119,7 @@ int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[L
 
         textbackground(BLACK);
 
-        atualiza_jogo (jogador, matriz_lab, bolachas_normais, bolachas_especiais);
+        atualiza_jogo (fantasma, jogador, matriz_lab, bolachas_normais, bolachas_especiais, direcao);
 
         switch(direcao)
         {
@@ -155,7 +155,7 @@ int move_pacman (PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[L
 
 }
 
-void atualiza_jogo (PACMAN *jogador, char matriz_lab [LINHA_LAB][COLUNA_LAB], int *bolachas_normais, int *bolachas_especiais)
+void atualiza_jogo (FANTASMA fantasma [], PACMAN *jogador, char matriz_lab [LINHA_LAB][COLUNA_LAB], int *bolachas_normais, int *bolachas_especiais, int direcao)
 {
     int continua_jogo;
 
@@ -184,6 +184,7 @@ void atualiza_jogo (PACMAN *jogador, char matriz_lab [LINHA_LAB][COLUNA_LAB], in
         printf("%d", jogador->score);
         textbackground(BLACK);
         bolachas_especiais --;
+        poder_ativado(fantasma, jogador, matriz_lab, bolachas_normais, bolachas_especiais, direcao);
     }
 
     if(bolachas_especiais == 0 && bolachas_normais == 0)
@@ -192,6 +193,47 @@ void atualiza_jogo (PACMAN *jogador, char matriz_lab [LINHA_LAB][COLUNA_LAB], in
         printf("vc ganhou, otario.");
         continua_jogo = getch();
     }
+}
+
+void poder_ativado (FANTASMA fantasma[], PACMAN *jogador,  char matriz_lab [LINHA_LAB][COLUNA_LAB], int *bolachas_normais, int *bolachas_especiais, int direcao)
+{
+    clock_t start, end = 0;
+    int i, direcaoAnt, direcaoT;
+
+    start = clock ();
+
+    do
+    {
+        movimenta_todos_fastasmas (fantasma, matriz_lab, &jogador);
+        testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
+
+        for (i = 0; i < 3; i ++)
+        {
+
+            if(kbhit())
+            {
+                direcaoT = traduz_teclas();
+                if(direcaoT != 9)
+                    direcao = direcaoT;
+            }
+
+            if((move_pacman (fantasma, &jogador, direcao, direcaoAnt, matriz_lab, &bolachas_especiais, &bolachas_normais)) == 1)
+            {
+                direcaoAnt = direcao;
+            }
+
+            else
+            {
+                move_pacman(fantasma, &jogador, direcaoAnt, direcao, matriz_lab, &bolachas_especiais, &bolachas_normais);
+            }
+
+            testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
+        }
+
+        end = clock ();
+        Sleep (200);
+    }
+    while((end - start) < 5000);
 }
 
 void SetConsoleSize(unsigned largura, unsigned altura) //aumenta tamanho da tela, funcao do moodle
@@ -234,7 +276,7 @@ void move_fantasma (FANTASMA *fantasma, char matriz_lab [LINHA_LAB][COLUNA_LAB],
         putchxy(x, y, '*');
     }
 
-    if(matriz_lab[y-3][x-3] == ' ' || matriz_lab[y-3][x-3] == 'W')
+    if(matriz_lab[y-3][x-3] == ' ' || matriz_lab[y-3][x-3] == 'W' || matriz_lab[y-3][x-3] == 'C' )
     {
         putchxy(x, y, ' ');
     }
@@ -264,12 +306,14 @@ void direcao_movimento_fantasma (FANTASMA *fantasma, char matriz_lab [LINHA_LAB]
 
     while(move == 0)
     {
-xt = fantasma->pos.x, yt = fantasma->pos.y;
+        xt = fantasma->pos.x;
+        yt = fantasma->pos.y;
+
         if (testa_bifurcacao (fantasma->dir_fant, fantasma->pos.x, fantasma->pos.y, matriz_lab) == 1)
         {
-            sorteia_decisao = rand() %2;
+            sorteia_decisao = rand() %100;
 
-            if(sorteia_decisao == 0)
+            if(sorteia_decisao > PROBDIRECAOFANTASMA)
             {
                 fantasma->dir_fant = fantasma->dir_fant = calcula_menor_distancia(jogador, fantasma);
             }

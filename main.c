@@ -58,26 +58,29 @@ Se a primeira dada for um obstaculo ja muda.
         do
         {
             movimenta_todos_fastasmas (fantasma, matriz_lab, &jogador);
-            testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
+            //testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
 
-            if(kbhit())
+            for (i = 0; i<2; i++)
+            {
+                if(kbhit())
             {
                 direcaoT = traduz_teclas();
                 if(direcaoT != 9)
                     direcao = direcaoT;
             }
 
-            if((move_pacman (&jogador, direcao, direcaoAnt, matriz_lab, &bolachas_especiais, &bolachas_normais)) == 1)
+            if((move_pacman (fantasma, &jogador, direcao, direcaoAnt, matriz_lab, &bolachas_especiais, &bolachas_normais)) == 1)
             {
                 direcaoAnt = direcao;
             }
             else
             {
-            move_pacman(&jogador, direcaoAnt, direcao, matriz_lab, &bolachas_especiais, &bolachas_normais);
+            move_pacman(fantasma, &jogador, direcaoAnt, direcao, matriz_lab, &bolachas_especiais, &bolachas_normais);
             }
-            testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
+            }
+            //testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
 
-            Sleep (300);
+            Sleep (200);
         }
         while(jogador.vidas != 0);
 
