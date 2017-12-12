@@ -20,11 +20,11 @@ int main ()
     jogador.vidas = 2;
     jogador.score = 0;
 
-/*
-Seto a posicao deles inicial para uma direcao qualquer,
-para que somente mude depois quando encontrarem um obstaculo.
-Se a primeira dada for um obstaculo ja muda.
-*/
+    /*
+    Seto a posicao deles inicial para uma direcao qualquer,
+    para que somente mude depois quando encontrarem um obstaculo.
+    Se a primeira dada for um obstaculo ja muda.
+    */
 
     for(i = 0; i <NUM_FANTASMA; i ++)
     {
@@ -57,30 +57,71 @@ Se a primeira dada for um obstaculo ja muda.
 
         do
         {
-            movimenta_todos_fastasmas (fantasma, matriz_lab, &jogador);
-            //testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
+            if(jogador.poder == 1)
+            {
+                clock_t start, end = 0;
 
-            for (i = 0; i<2; i++)
-            {
-                if(kbhit())
-            {
-                direcaoT = traduz_teclas();
-                if(direcaoT != 9)
-                    direcao = direcaoT;
-            }
+                start = clock ();
 
-            if((move_pacman (fantasma, &jogador, direcao, direcaoAnt, matriz_lab, &bolachas_especiais, &bolachas_normais)) == 1)
-            {
-                direcaoAnt = direcao;
+                do
+                {
+                    movimenta_todos_fastasmas (fantasma, matriz_lab, &jogador);
+                    //testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
+
+                    for (i = 0; i<2; i++)
+                    {
+                        if(kbhit())
+                        {
+                            direcaoT = traduz_teclas();
+                            if(direcaoT != 9)
+                                direcao = direcaoT;
+                        }
+
+                        if((move_pacman (fantasma, &jogador, direcao, direcaoAnt, matriz_lab, &bolachas_especiais, &bolachas_normais)) == 1)
+                        {
+                            direcaoAnt = direcao;
+                        }
+                        else
+                        {
+                            move_pacman(fantasma, &jogador, direcaoAnt, direcao, matriz_lab, &bolachas_especiais, &bolachas_normais);
+                        }
+                    }
+                    //testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
+
+                    end = clock ();
+                    Sleep (200);
+                }
+                while((end - start < 5000));
+                jogador.poder = 0;
             }
             else
             {
-            move_pacman(fantasma, &jogador, direcaoAnt, direcao, matriz_lab, &bolachas_especiais, &bolachas_normais);
-            }
-            }
-            //testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
+                movimenta_todos_fastasmas (fantasma, matriz_lab, &jogador);
+                //testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
 
-            Sleep (200);
+
+                if(kbhit())
+                {
+                    direcaoT = traduz_teclas();
+                    if(direcaoT != 9)
+                        direcao = direcaoT;
+                }
+
+                if((move_pacman (fantasma, &jogador, direcao, direcaoAnt, matriz_lab, &bolachas_especiais, &bolachas_normais)) == 1)
+                {
+                    direcaoAnt = direcao;
+                }
+                else
+                {
+                    move_pacman(fantasma, &jogador, direcaoAnt, direcao, matriz_lab, &bolachas_especiais, &bolachas_normais);
+                }
+
+                //testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
+
+
+                Sleep (100);
+            }
+
         }
         while(jogador.vidas != 0);
 
@@ -90,4 +131,6 @@ Se a primeira dada for um obstaculo ja muda.
     gotoxy(35, 35);
     return 0;
 }
-
+/* Dependendo de quantas vezes a mais a função do pacman vai se repetir a mais em relacao a do fantasma
+o sleep deve ser aumentado em função deste numero, pois senao da ideia de que o pacman aumentou a velocidade
+em vez de os fantasmas diminuirem a deles*/

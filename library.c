@@ -184,7 +184,7 @@ void atualiza_jogo (FANTASMA fantasma [], PACMAN *jogador, char matriz_lab [LINH
         printf("%d", jogador->score);
         textbackground(BLACK);
         bolachas_especiais --;
-        poder_ativado(fantasma, jogador, matriz_lab, bolachas_normais, bolachas_especiais, direcao);
+        jogador->poder = 1;
     }
 
     if(bolachas_especiais == 0 && bolachas_normais == 0)
