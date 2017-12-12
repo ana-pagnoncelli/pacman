@@ -89,9 +89,6 @@ int main ()
                         testa_se_pacman_comeu_fantasma(&jogador, fantasma, matriz_lab, pos_iniciais_fantasmas);
 
                     }
-                    movimenta_todos_fastasmas (fantasma, matriz_lab, &jogador);
-                    testa_se_pacman_comeu_fantasma(&jogador, fantasma, matriz_lab, pos_iniciais_fantasmas);
-
 
                     end = clock ();
                     Sleep (200);
