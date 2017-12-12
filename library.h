@@ -21,7 +21,8 @@ typedef enum
     DIREITA,    // 1
     ESQUERDA,   // 2
     BAIXO,      // 3
-    PARA        // 4
+    PARA,        // 4
+    PAUSE       // 5
 } DIRECOES;
 
 

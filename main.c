@@ -69,8 +69,8 @@ int main ()
                     movimenta_todos_fastasmas (fantasma, matriz_lab, &jogador);
                     testa_se_pacman_comeu_fantasma(&jogador, fantasma, matriz_lab, pos_iniciais_fantasmas);
 
-                   // for (i = 0; i<2; i++)
-                    //{
+                    for (i = 0; i<2; i++)
+                    {
                         if(kbhit())
                         {
                             direcaoT = traduz_teclas();
@@ -87,26 +87,14 @@ int main ()
                             move_pacman(fantasma, &jogador, direcaoAnt, direcao, matriz_lab, &bolachas_especiais, &bolachas_normais);
                         }
                         testa_se_pacman_comeu_fantasma(&jogador, fantasma, matriz_lab, pos_iniciais_fantasmas);
-                        if(kbhit())
-                        {
-                            direcaoT = traduz_teclas();
-                            if(direcaoT != 9)
-                                direcao = direcaoT;
-                        }
 
-                        if((move_pacman (fantasma, &jogador, direcao, direcaoAnt, matriz_lab, &bolachas_especiais, &bolachas_normais)) == 1)
-                        {
-                            direcaoAnt = direcao;
-                        }
-                        else
-                        {
-                            move_pacman(fantasma, &jogador, direcaoAnt, direcao, matriz_lab, &bolachas_especiais, &bolachas_normais);
-                        }
-                        testa_se_pacman_comeu_fantasma(&jogador, fantasma, matriz_lab, pos_iniciais_fantasmas);
-                  //  }
+                    }
+                    movimenta_todos_fastasmas (fantasma, matriz_lab, &jogador);
+                    testa_se_pacman_comeu_fantasma(&jogador, fantasma, matriz_lab, pos_iniciais_fantasmas);
+
 
                     end = clock ();
-                    Sleep (100);
+                    Sleep (200);
                 }
                 while((end - start < 50000));
                 jogador.poder = 0;
@@ -116,9 +104,6 @@ int main ()
 
             else //senao sempre executa a funcao normal
             {
-                movimenta_todos_fastasmas (fantasma, matriz_lab, &jogador);
-                //testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
-
 
                 if(kbhit())
                 {
@@ -127,16 +112,44 @@ int main ()
                         direcao = direcaoT;
                 }
 
-                if((move_pacman (fantasma, &jogador, direcao, direcaoAnt, matriz_lab, &bolachas_especiais, &bolachas_normais)) == 1)
+                if(direcao == PAUSE) //testa se o jogo esta pausado, se n estiver roda normalmente
                 {
-                    direcaoAnt = direcao;
-                }
-                else
-                {
-                    move_pacman(fantasma, &jogador, direcaoAnt, direcao, matriz_lab, &bolachas_especiais, &bolachas_normais);
+                    gotoxy(40, 18);
+                    textbackground(YELLOW);
+                    textcolor(BLACK);
+                    printf("JOGO PAUSADO, PRESS ANY BUTTON.");
+                    textbackground(BLACK);
+                    textcolor(WHITE);
+                    while(direcao == PAUSE)
+                    {
+                        if(kbhit())
+                        {
+                            direcaoT = traduz_teclas();
+                            if(direcaoT != 9)
+                                direcao = direcaoT;
+                        }
+                    }
+
+                    printa_labirinto(matriz_lab);
                 }
 
-                //testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
+                else
+                {
+                    movimenta_todos_fastasmas (fantasma, matriz_lab, &jogador);
+                    testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
+
+                    if((move_pacman (fantasma, &jogador, direcao, direcaoAnt, matriz_lab, &bolachas_especiais, &bolachas_normais)) == 1)
+                    {
+                        direcaoAnt = direcao;
+                    }
+                    else
+                    {
+                        move_pacman(fantasma, &jogador, direcaoAnt, direcao, matriz_lab, &bolachas_especiais, &bolachas_normais);
+                    }
+
+                    testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
+                }
+
 
 
                 Sleep (100);

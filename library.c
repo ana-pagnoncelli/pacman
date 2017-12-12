@@ -62,7 +62,9 @@ int traduz_teclas ()
     else if(tecla == 'A')
         return ESQUERDA; //3
     else if(tecla == 'X')
-        return PARA;
+        return PARA; //4
+    else if(tecla == 'P')
+        return PAUSE;//5
     return 9; //default
 }
 
@@ -331,13 +333,13 @@ void direcao_movimento_fantasma (FANTASMA *fantasma, char matriz_lab [LINHA_LAB]
 
 int testa_bifurcacao (int dir_fant, int xt, int yt, char matriz_lab [LINHA_LAB][COLUNA_LAB])
 {
-    int num_caminhos = 0;
+    int num_caminhos = 0; //tenta ver se o num_caminhos é maior de dois (oq define uma bifurcação)
 
     xt ++; //testa se para a direita tem bifurcacao.
 
     if((testa_parede(xt, yt, matriz_lab)) == 1)
     {
-        num_caminhos ++; //se entrou aqui quer dizer que nao tem parede, entao retorna que tem true para bifurcacao
+        num_caminhos ++; //se entrou aqui quer dizer que nao tem parede para este lado entao soma 1
     }
 
     xt --; // volta original
@@ -370,7 +372,7 @@ int testa_bifurcacao (int dir_fant, int xt, int yt, char matriz_lab [LINHA_LAB][
 
     if(num_caminhos>2)
     {
-        return 1;
+        return 1; //numero de caminhos disponiveis maior que 1, retorna true
     }
     else
     {
@@ -601,7 +603,7 @@ void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char 
                 gotoxy(50, 15);
                 textbackground(YELLOW);
                 textcolor(BLACK);
-                printf("VC MORREU, TEM MAIS %d VIDAS.", jogador->vidas);
+                printf("VC MORREU, TEM MAIS %d VIDA(S).", jogador->vidas);
                 desenha_menu();
                 textbackground(BLACK);
                 textcolor(WHITE);
@@ -614,6 +616,8 @@ void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char 
                     textbackground(BLUE);
                     gotoxy(32, 1);
                     printf("%d", jogador->vidas);
+                    gotoxy(12, 1);
+                    printf("%d", jogador->score);
                     textbackground(BLACK);
                 }
             }
