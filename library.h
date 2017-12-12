@@ -52,7 +52,7 @@ void SetConsoleSize(unsigned largura, unsigned altura); //funciona
 
 void direcao_movimento_fantasma (FANTASMA *fantasma, char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador);
 void move_fantasma (FANTASMA *fantasma, char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador); //funciona
-void gerador_fantasma (FANTASMA fantasma[], char matriz_lab[LINHA_LAB][COLUNA_LAB]);
+void gerador_fantasma (FANTASMA fantasma[], char matriz_lab[LINHA_LAB][COLUNA_LAB], COORDENADA pos_iniciais_fantasmas []);
 void movimenta_todos_fastasmas (FANTASMA fantasma[], char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador);
 int calcula_menor_distancia(PACMAN *jogador, FANTASMA *fantasma);
 float calculo_da_distancia(int x_pac, int y_pac, int x_fant, int y_fant);
@@ -60,7 +60,8 @@ float calculo_da_distancia(int x_pac, int y_pac, int x_fant, int y_fant);
 
 int testa_parede (int x, int y, char matriz_lab [LINHA_LAB][COLUNA_LAB]);
 int testa_bifurcacao (int dir_fant, int xt, int yt, char matriz_lab [LINHA_LAB][COLUNA_LAB]);
-
+void testa_se_pacman_comeu_fantasma (PACMAN *jogador, FANTASMA fantasma [], char matriz_lab[LINHA_LAB][COLUNA_LAB], COORDENADA pos_iniciais_fantasmas []);
+void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char matriz_lab[LINHA_LAB][COLUNA_LAB]);
 
 
 void le_labirinto (char matriz_lab[LINHA_LAB][COLUNA_LAB]);
@@ -68,5 +69,4 @@ void printa_labirinto(char matriz_lab[LINHA_LAB][COLUNA_LAB]);
 void posicao_pacman(PACMAN *jogador, char matriz_lab[LINHA_LAB][COLUNA_LAB]);
 int conta_bolachas_normais (char matriz_lab[LINHA_LAB][COLUNA_LAB]);
 int conta_bolachas_especiais (char matriz_lab[LINHA_LAB][COLUNA_LAB]);
-void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char matriz_lab[LINHA_LAB][COLUNA_LAB]);
 void game_over ();

@@ -16,6 +16,7 @@ int main ()
     int linha,coluna, encontrado = 0;
     PACMAN jogador;
     int bolachas_normais = 0, bolachas_especiais = 0, i;
+    COORDENADA pos_iniciais_fantasmas [NUM_FANTASMA];
 
     jogador.vidas = 2;
     jogador.score = 0;
@@ -47,7 +48,7 @@ int main ()
         bolachas_normais = conta_bolachas_normais(matriz_lab);
         bolachas_especiais = conta_bolachas_especiais(matriz_lab);
         printa_labirinto(matriz_lab);
-        gerador_fantasma(fantasma, matriz_lab);
+        gerador_fantasma(fantasma, matriz_lab, pos_iniciais_fantasmas);
         posicao_pacman(&jogador, matriz_lab);
         desenha_menu();
         gotoxy(32, 1);
@@ -57,7 +58,7 @@ int main ()
 
         do
         {
-            if(jogador.poder == 1)
+            if(jogador.poder == 1) //faz isso apenas quando o poder esta ativado
             {
                 clock_t start, end = 0;
 
@@ -66,10 +67,10 @@ int main ()
                 do
                 {
                     movimenta_todos_fastasmas (fantasma, matriz_lab, &jogador);
-                    //testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
+                    testa_se_pacman_comeu_fantasma(&jogador, fantasma, matriz_lab, pos_iniciais_fantasmas);
 
-                    for (i = 0; i<2; i++)
-                    {
+                   // for (i = 0; i<2; i++)
+                    //{
                         if(kbhit())
                         {
                             direcaoT = traduz_teclas();
@@ -85,16 +86,35 @@ int main ()
                         {
                             move_pacman(fantasma, &jogador, direcaoAnt, direcao, matriz_lab, &bolachas_especiais, &bolachas_normais);
                         }
-                    }
-                    //testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
+                        testa_se_pacman_comeu_fantasma(&jogador, fantasma, matriz_lab, pos_iniciais_fantasmas);
+                        if(kbhit())
+                        {
+                            direcaoT = traduz_teclas();
+                            if(direcaoT != 9)
+                                direcao = direcaoT;
+                        }
+
+                        if((move_pacman (fantasma, &jogador, direcao, direcaoAnt, matriz_lab, &bolachas_especiais, &bolachas_normais)) == 1)
+                        {
+                            direcaoAnt = direcao;
+                        }
+                        else
+                        {
+                            move_pacman(fantasma, &jogador, direcaoAnt, direcao, matriz_lab, &bolachas_especiais, &bolachas_normais);
+                        }
+                        testa_se_pacman_comeu_fantasma(&jogador, fantasma, matriz_lab, pos_iniciais_fantasmas);
+                  //  }
 
                     end = clock ();
-                    Sleep (200);
+                    Sleep (100);
                 }
-                while((end - start < 5000));
+                while((end - start < 50000));
                 jogador.poder = 0;
             }
-            else
+
+
+
+            else //senao sempre executa a funcao normal
             {
                 movimenta_todos_fastasmas (fantasma, matriz_lab, &jogador);
                 //testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);

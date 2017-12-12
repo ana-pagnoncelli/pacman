@@ -195,46 +195,6 @@ void atualiza_jogo (FANTASMA fantasma [], PACMAN *jogador, char matriz_lab [LINH
     }
 }
 
-void poder_ativado (FANTASMA fantasma[], PACMAN *jogador,  char matriz_lab [LINHA_LAB][COLUNA_LAB], int *bolachas_normais, int *bolachas_especiais, int direcao)
-{
-    clock_t start, end = 0;
-    int i, direcaoAnt, direcaoT;
-
-    start = clock ();
-
-    do
-    {
-        movimenta_todos_fastasmas (fantasma, matriz_lab, &jogador);
-        testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
-
-        for (i = 0; i < 3; i ++)
-        {
-
-            if(kbhit())
-            {
-                direcaoT = traduz_teclas();
-                if(direcaoT != 9)
-                    direcao = direcaoT;
-            }
-
-            if((move_pacman (fantasma, &jogador, direcao, direcaoAnt, matriz_lab, &bolachas_especiais, &bolachas_normais)) == 1)
-            {
-                direcaoAnt = direcao;
-            }
-
-            else
-            {
-                move_pacman(fantasma, &jogador, direcaoAnt, direcao, matriz_lab, &bolachas_especiais, &bolachas_normais);
-            }
-
-            testa_se_fantasma_comeu_pacman (&jogador, fantasma, matriz_lab);
-        }
-
-        end = clock ();
-        Sleep (200);
-    }
-    while((end - start) < 5000);
-}
 
 void SetConsoleSize(unsigned largura, unsigned altura) //aumenta tamanho da tela, funcao do moodle
 {
@@ -284,7 +244,15 @@ void move_fantasma (FANTASMA *fantasma, char matriz_lab [LINHA_LAB][COLUNA_LAB],
     direcao_movimento_fantasma(fantasma, matriz_lab, jogador);
 
     textbackground(RED);
-    putchxy(fantasma->pos.x, fantasma->pos.y, 'W');
+    if(jogador->poder == 1)
+    {
+        textbackground(GREEN);
+        putchxy(fantasma->pos.x, fantasma->pos.y, 'w');
+    }
+    else
+    {
+        putchxy(fantasma->pos.x, fantasma->pos.y, 'W');
+    }
     textbackground(BLACK);
 
 }
@@ -313,7 +281,7 @@ void direcao_movimento_fantasma (FANTASMA *fantasma, char matriz_lab [LINHA_LAB]
         {
             sorteia_decisao = rand() %100;
 
-            if(sorteia_decisao > PROBDIRECAOFANTASMA)
+            if(sorteia_decisao < PROBDIRECAOFANTASMA)
             {
                 fantasma->dir_fant = fantasma->dir_fant = calcula_menor_distancia(jogador, fantasma);
             }
@@ -464,7 +432,7 @@ int calcula_menor_distancia(PACMAN *jogador, FANTASMA *fantasma)
     return direcao; //retorna a direcao final.
 }
 
-void gerador_fantasma (FANTASMA fantasma[], char matriz_lab[LINHA_LAB][COLUNA_LAB])
+void gerador_fantasma (FANTASMA fantasma[], char matriz_lab[LINHA_LAB][COLUNA_LAB], COORDENADA pos_iniciais_fantasmas [])
 {
 
     int linha = 0, coluna = 0, encontrado, i;
@@ -479,7 +447,9 @@ void gerador_fantasma (FANTASMA fantasma[], char matriz_lab[LINHA_LAB][COLUNA_LA
             if(matriz_lab[linha][coluna] == 'W')
             {
                 fantasma[i].pos.x = coluna + 3;
+                pos_iniciais_fantasmas[i].x = coluna + 3; //guarda a posicao x em que o fantasma nasceu
                 fantasma[i].pos.y = linha + 3;
+                pos_iniciais_fantasmas[i].y = linha + 3;//guarda a posicao y em que o fantasma nasceu
                 textbackground(RED);
                 putchxy(coluna + 3, linha + 3, 'W');
                 encontrado ++;
@@ -650,6 +620,28 @@ void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char 
         }
     }
 
+}
+
+void testa_se_pacman_comeu_fantasma (PACMAN *jogador, FANTASMA fantasma [], char matriz_lab[LINHA_LAB][COLUNA_LAB], COORDENADA pos_iniciais_fantasmas [])
+{
+    int i;
+
+    for(i = 0; i < NUM_FANTASMA; i++)
+    {
+        if(jogador -> pos.y == fantasma[i].pos.y && jogador -> pos.x == fantasma[i].pos.x)
+        {
+            textbackground(GREEN);
+            putchxy(pos_iniciais_fantasmas[i].x, pos_iniciais_fantasmas[i].y, 'w');
+            fantasma[i].pos.x = pos_iniciais_fantasmas[i].x;
+            fantasma[i].pos.y = pos_iniciais_fantasmas[i].y;
+            jogador->score = jogador->score + 200;
+            gotoxy(12, 1);
+            textbackground(BLUE);
+            printf("%d", jogador->score);
+            textbackground(BLACK);
+        }
+
+    }
 }
 
 void game_over ()
