@@ -623,7 +623,7 @@ void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char 
             system("cls");
             jogador->vidas --; //atualiza a quantidade de vidas
 
-            if(jogador->vidas == 0) //testa se era a ultima vida do pacman
+            if(jogador->vidas <= 0) //testa se era a ultima vida do pacman
             {
                 game_over (); //se era acabou o jogo
             }
@@ -638,23 +638,28 @@ void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char 
                 textbackground(BLACK);
                 textcolor(WHITE);
 
-                continua_jogo = getch();
-                if(continua_jogo == 13)
+            }
+
+                do
                 {
-                    printa_labirinto(matriz_lab);
-                    posicao_pacman(jogador, matriz_lab); //seta o pacman na posicao inicial
-                    textbackground(BLUE);
-                    gotoxy(32, 1);
-                    printf("%d", jogador->vidas);
-                    gotoxy(12, 1);
-                    printf("%d", jogador->score);
-                    textbackground(BLACK);
+                    continua_jogo = getch();
+                    if(continua_jogo == 13)
+                    {
+                        printa_labirinto(matriz_lab);
+                        posicao_pacman(jogador, matriz_lab); //seta o pacman na posicao inicial
+                        textbackground(BLUE);
+                        gotoxy(32, 1);
+                        printf("%d", jogador->vidas);
+                        gotoxy(12, 1);
+                        printf("%d", jogador->score);
+                        textbackground(BLACK);
+                    }
                 }
+                while (continua_jogo =! 13);
+
             }
         }
     }
-
-}
 
 void testa_se_pacman_comeu_fantasma (PACMAN *jogador, FANTASMA fantasma [], char matriz_lab[LINHA_LAB][COLUNA_LAB], COORDENADA pos_iniciais_fantasmas [])
 {
@@ -683,7 +688,7 @@ void game_over ()
     gotoxy(50, 15);
     textbackground(YELLOW);
     textcolor(BLACK);
-    printf("ACABOU.");
+    printf("ACABARAM SUAS VIDAS, TENTE NOVAMENTE MAIS TARDE.");
     textbackground(BLACK);
     textcolor(WHITE);
 }

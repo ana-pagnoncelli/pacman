@@ -153,7 +153,7 @@ int main ()
             }
 
         }
-        while(jogador.vidas != 0);
+        while(jogador.vidas > 0);
 
 
     }
