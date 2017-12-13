@@ -111,10 +111,10 @@ int main ()
 
                 if(direcao == PAUSE) //testa se o jogo esta pausado, se n estiver roda normalmente
                 {
-                    gotoxy(40, 18);
+                    gotoxy(20, 18);
                     textbackground(YELLOW);
                     textcolor(BLACK);
-                    printf("JOGO PAUSADO, PRESS ANY BUTTON.");
+                    printf("JOGO PAUSADO, PRESSIONE QUALQUER TECLA DE MOVIMENTACAO PARA CONTINUAR.");
                     textbackground(BLACK);
                     textcolor(WHITE);
                     while(direcao == PAUSE)

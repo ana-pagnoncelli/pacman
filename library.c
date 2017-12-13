@@ -42,7 +42,22 @@ void entrada_jogo()
     textcolor(BLACK);
     printf("START:");
     textbackground(BLACK);
-    textcolor(WHITE);
+    textcolor(YELLOW);
+    gotoxy(40, 17);
+    printf("Pressione enter para iniciar.");
+    gotoxy(10, 5);
+    printf("Teclas de movimento:");
+    gotoxy(10, 7);
+    printf("         W          ");
+    gotoxy(10, 8);
+    printf("    A         D     ");
+    gotoxy(10, 9);
+    printf("         S          ");
+    gotoxy(60, 28);
+    printf("Pressione X quando desejar parar o pacman");
+    gotoxy(65, 29);
+    printf("e P para pausar o jogo.");
+
 }
 
 /*Recebe atraves do kbhit uma tecla e define o que ela significa,
@@ -283,14 +298,29 @@ void direcao_movimento_fantasma (FANTASMA *fantasma, char matriz_lab [LINHA_LAB]
         {
             sorteia_decisao = rand() %100;
 
-            if(sorteia_decisao < PROBDIRECAOFANTASMA)
+            if(jogador->poder == 1)
             {
-                fantasma->dir_fant = fantasma->dir_fant = calcula_menor_distancia(jogador, fantasma);
+                if(sorteia_decisao > PROBDIRECAOFANTASMA)
+                {
+                    fantasma->dir_fant = fantasma->dir_fant = calcula_menor_distancia(jogador, fantasma);
+                }
+                else
+                {
+                    fantasma->dir_fant = rand() %4 ;
+                }
             }
             else
             {
-                fantasma->dir_fant = rand() %4 ;
+                if(sorteia_decisao < PROBDIRECAOFANTASMA)
+                {
+                    fantasma->dir_fant = fantasma->dir_fant = calcula_menor_distancia(jogador, fantasma);
+                }
+                else
+                {
+                    fantasma->dir_fant = rand() %4 ;
+                }
             }
+
         }
 
         switch(fantasma->dir_fant)
