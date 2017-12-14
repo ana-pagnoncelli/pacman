@@ -17,6 +17,7 @@ int main ()
     PACMAN jogador;
     int bolachas_normais = 0, bolachas_especiais = 0, i;
     COORDENADA pos_iniciais_fantasmas [NUM_FANTASMA];
+    int rep_pacman, rep_fant = 0;
 
     jogador.vidas = 2;
     jogador.score = 0;
@@ -58,6 +59,8 @@ int main ()
 
         do
         {
+            rep_fant = 0;
+
             if(jogador.poder == 1) //faz isso apenas quando o poder esta ativado
             {
                 clock_t start, end = 0;
@@ -66,32 +69,34 @@ int main ()
 
                 do
                 {
-                    movimenta_todos_fastasmas (fantasma, matriz_lab, &jogador);
-                    testa_se_pacman_comeu_fantasma(&jogador, fantasma, matriz_lab, pos_iniciais_fantasmas);
-
-                    for (i = 0; i<2; i++)
+                    if(rep_fant == 2)
                     {
-                        if(kbhit())
-                        {
-                            direcaoT = traduz_teclas();
-                            if(direcaoT != 9)
-                                direcao = direcaoT;
-                        }
-
-                        if((move_pacman (fantasma, &jogador, direcao, direcaoAnt, matriz_lab, &bolachas_especiais, &bolachas_normais)) == 1)
-                        {
-                            direcaoAnt = direcao;
-                        }
-                        else
-                        {
-                            move_pacman(fantasma, &jogador, direcaoAnt, direcao, matriz_lab, &bolachas_especiais, &bolachas_normais);
-                        }
+                        movimenta_todos_fastasmas (fantasma, matriz_lab, &jogador);
                         testa_se_pacman_comeu_fantasma(&jogador, fantasma, matriz_lab, pos_iniciais_fantasmas);
-
+                        rep_fant = 0;
                     }
 
+                    rep_fant ++;
+
+                    if(kbhit())
+                    {
+                        direcaoT = traduz_teclas();
+                        if(direcaoT != 9)
+                            direcao = direcaoT;
+                    }
+
+                    if((move_pacman (fantasma, &jogador, direcao, direcaoAnt, matriz_lab, &bolachas_especiais, &bolachas_normais)) == 1)
+                    {
+                        direcaoAnt = direcao;
+                    }
+                    else
+                    {
+                        move_pacman(fantasma, &jogador, direcaoAnt, direcao, matriz_lab, &bolachas_especiais, &bolachas_normais);
+                    }
+                    testa_se_pacman_comeu_fantasma(&jogador, fantasma, matriz_lab, pos_iniciais_fantasmas);
+
                     end = clock ();
-                    Sleep (200);
+                    Sleep (100);
                 }
                 while((end - start < 50000));
                 jogador.poder = 0;
@@ -161,6 +166,3 @@ int main ()
     gotoxy(35, 35);
     return 0;
 }
-/* Dependendo de quantas vezes a mais a função do pacman vai se repetir a mais em relacao a do fantasma
-o sleep deve ser aumentado em função deste numero, pois senao da ideia de que o pacman aumentou a velocidade
-em vez de os fantasmas diminuirem a deles*/

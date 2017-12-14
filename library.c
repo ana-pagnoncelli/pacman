@@ -124,6 +124,7 @@ int move_pacman (FANTASMA fantasma [], PACMAN *jogador, int direcao, int direcao
     if(direcao == PARA)
     {
         textbackground(YELLOW);
+        textcolor(BLACK);
         putchxy(jogador->pos.x, jogador->pos.y, 'C');
         textbackground(BLACK);
         certo = 1;
@@ -164,6 +165,7 @@ int move_pacman (FANTASMA fantasma [], PACMAN *jogador, int direcao, int direcao
         }
 
         textbackground(YELLOW);
+        textcolor(BLACK);
         putchxy(jogador->pos.x, jogador->pos.y, 'C');
         textbackground(BLACK);
     }
@@ -630,10 +632,12 @@ void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char 
             else //senao continua
             {
 
-                gotoxy(50, 15);
+                gotoxy(38, 17);
                 textbackground(YELLOW);
                 textcolor(BLACK);
                 printf("VC MORREU, TEM MAIS %d VIDA(S).", jogador->vidas);
+                gotoxy(37, 20);
+                printf("Pressione enter para continuar.");
                 desenha_menu();
                 textbackground(BLACK);
                 textcolor(WHITE);
@@ -643,7 +647,7 @@ void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char 
                 do
                 {
                     continua_jogo = getch();
-                    if(continua_jogo == 'q')
+                    if(continua_jogo == 13)
                     {
                         printa_labirinto(matriz_lab);
                         posicao_pacman(jogador, matriz_lab); //seta o pacman na posicao inicial
@@ -655,7 +659,7 @@ void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char 
                         textbackground(BLACK);
                     }
                 }
-                while (continua_jogo =! 'q');
+                while (continua_jogo != 13);
 
             }
         }
