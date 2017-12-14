@@ -391,14 +391,14 @@ int testa_bifurcacao (int dir_fant, int xt, int yt, char matriz_lab [LINHA_LAB][
 
     yt ++; //volta ao original
 
-    yt --; //testa se para baixo tem bifurcacao
+    yt ++; //testa se para baixo tem bifurcacao
 
     if((testa_parede(xt, yt, matriz_lab)) == 1)
     {
         num_caminhos ++;
     }
 
-    yt ++;//volta ao original
+    yt --;//volta ao original
 
     if(num_caminhos>2)
     {
@@ -643,7 +643,7 @@ void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char 
                 do
                 {
                     continua_jogo = getch();
-                    if(continua_jogo == 13)
+                    if(continua_jogo == 'q')
                     {
                         printa_labirinto(matriz_lab);
                         posicao_pacman(jogador, matriz_lab); //seta o pacman na posicao inicial
@@ -655,7 +655,7 @@ void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char 
                         textbackground(BLACK);
                     }
                 }
-                while (continua_jogo =! 13);
+                while (continua_jogo =! 'q');
 
             }
         }
