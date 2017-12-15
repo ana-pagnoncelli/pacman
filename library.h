@@ -70,4 +70,5 @@ void printa_labirinto(char matriz_lab[LINHA_LAB][COLUNA_LAB]);
 void posicao_pacman(PACMAN *jogador, char matriz_lab[LINHA_LAB][COLUNA_LAB]);
 int conta_bolachas_normais (char matriz_lab[LINHA_LAB][COLUNA_LAB]);
 int conta_bolachas_especiais (char matriz_lab[LINHA_LAB][COLUNA_LAB]);
-void game_over ();
+void game_over (PACMAN *jogador);
+int testa_se_jogo_acabou (char matriz_lab [LINHA_LAB][COLUNA_LAB]);

@@ -128,6 +128,7 @@ int move_pacman (FANTASMA fantasma [], PACMAN *jogador, int direcao, int direcao
         putchxy(jogador->pos.x, jogador->pos.y, 'C');
         textbackground(BLACK);
         certo = 1;
+        atualiza_jogo (fantasma, jogador, matriz_lab, bolachas_normais, bolachas_especiais, direcao);
     }
 
     else
@@ -206,12 +207,28 @@ void atualiza_jogo (FANTASMA fantasma [], PACMAN *jogador, char matriz_lab [LINH
         jogador->poder = 1;
     }
 
-    if(bolachas_especiais == 0 && bolachas_normais == 0)
+    if(testa_se_jogo_acabou(matriz_lab) == 1) //se retornar 1 quer dizer que o jogo acabou.
     {
         system("cls");
         printf("vc ganhou, otario.");
         continua_jogo = getch();
+        printf("ACAAAAAAAAAAAAAAAAAAAAABO");
     }
+}
+
+int testa_se_jogo_acabou (char matriz_lab [LINHA_LAB][COLUNA_LAB])
+{
+    int linha, coluna;
+
+    for(linha = 0; linha < LINHA_LAB; linha ++)
+    {
+        for(coluna = 0; coluna < COLUNA_LAB; coluna ++)
+        {
+            if(matriz_lab[linha][coluna] == 'o' || matriz_lab[linha][coluna] == '*' );
+            return 0;
+        }
+    }
+    return 1;
 }
 
 
@@ -247,11 +264,13 @@ void move_fantasma (FANTASMA *fantasma, char matriz_lab [LINHA_LAB][COLUNA_LAB],
     }
     if(matriz_lab[y-3][x-3] == 'o' ) //quando o fantasma passa por cima dos espaços q contem bolachinhas
     {
+        textcolor(WHITE);
         putchxy(x, y, 'o'); //desenha elas de novo
 
     }
     if(matriz_lab[y-3][x-3] == '*')
     {
+        textcolor(WHITE);
         putchxy(x, y, '*');
     }
 
@@ -259,6 +278,8 @@ void move_fantasma (FANTASMA *fantasma, char matriz_lab [LINHA_LAB][COLUNA_LAB],
     {
         putchxy(x, y, ' ');
     }
+
+    textcolor(BLACK);
 
     direcao_movimento_fantasma(fantasma, matriz_lab, jogador);
 
@@ -627,16 +648,16 @@ void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char 
 
             if(jogador->vidas <= 0) //testa se era a ultima vida do pacman
             {
-                game_over (); //se era acabou o jogo
+                game_over (jogador); //se era acabou o jogo
             }
             else //senao continua
             {
 
-                gotoxy(38, 17);
+                gotoxy(12, 8);
                 textbackground(YELLOW);
                 textcolor(BLACK);
                 printf("VC MORREU, TEM MAIS %d VIDA(S).", jogador->vidas);
-                gotoxy(37, 20);
+                gotoxy(60, 28);
                 printf("Pressione enter para continuar.");
                 desenha_menu();
                 textbackground(BLACK);
@@ -687,12 +708,14 @@ void testa_se_pacman_comeu_fantasma (PACMAN *jogador, FANTASMA fantasma [], char
     }
 }
 
-void game_over ()
+void game_over (PACMAN *jogador)
 {
-    gotoxy(50, 15);
+    gotoxy(35, 18);
     textbackground(YELLOW);
     textcolor(BLACK);
     printf("ACABARAM SUAS VIDAS, TENTE NOVAMENTE MAIS TARDE.");
+    gotoxy(50, 20);
+    printf("Seu score foi: %d", jogador->score);
     textbackground(BLACK);
     textcolor(WHITE);
 }

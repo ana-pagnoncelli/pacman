@@ -98,7 +98,7 @@ int main ()
                     end = clock ();
                     Sleep (100);
                 }
-                while((end - start < 50000));
+                while((end - start < 5000));
                 jogador.poder = 0;
             }
 
@@ -106,8 +106,7 @@ int main ()
 
             else //senao sempre executa a funcao normal
             {
-
-                if(kbhit())
+               if(kbhit())
                 {
                     direcaoT = traduz_teclas();
                     if(direcaoT != 9)
@@ -118,7 +117,7 @@ int main ()
                 {
                     gotoxy(20, 18);
                     textbackground(YELLOW);
-                    textcolor(BLACK);
+                    //textcolor(BLACK);
                     printf("JOGO PAUSADO, PRESSIONE QUALQUER TECLA DE MOVIMENTACAO PARA CONTINUAR.");
                     textbackground(BLACK);
                     textcolor(WHITE);
