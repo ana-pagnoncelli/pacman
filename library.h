@@ -7,7 +7,7 @@
 #define LINHA_LAB 31
 #define COLUNA_LAB 101
 #include <math.h>
-#define PROBDIRECAOFANTASMA 0
+#define PROBDIRECAOFANTASMA 50
 
 typedef struct
 {

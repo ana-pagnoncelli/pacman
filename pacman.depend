@@ -20,7 +20,7 @@
 	<time.h>
 	<string.h>
 
-1513300869 source:c:\users\anaca\documents\github\pacman\library.c
+1513311409 source:c:\users\anaca\documents\github\pacman\library.c
 	<stdio.h>
 	"library.h"
 	<conio2.h>
@@ -28,14 +28,14 @@
 	<time.h>
 	<string.h>
 
-1513299891 c:\users\anaca\documents\github\pacman\library.h
+1513311224 c:\users\anaca\documents\github\pacman\library.h
 	<stdio.h>
 	<conio2.h>
 	<windows.h>
 	<time.h>
 	<math.h>
 
-1513301033 source:c:\users\anaca\documents\github\pacman\main.c
+1513301146 source:c:\users\anaca\documents\github\pacman\main.c
 	<stdio.h>
 	"library.h"
 	<conio2.h>

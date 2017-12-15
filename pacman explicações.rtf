@@ -1,0 +1,88 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1046{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fnil\fcharset2 Symbol;}}
+{\*\listtable 
+{\list\listhybrid
+{\listlevel\levelnfc23\leveljc0\levelstartat1{\leveltext\'01\'B7;}{\levelnumbers;}\f1\jclisttab\tx0}
+{\listlevel\levelnfc0\leveljc0\levelstartat1{\leveltext\'02\'01.;}{\levelnumbers\'01;}\jclisttab\tx0}
+{\listlevel\levelnfc4\leveljc0\levelstartat1{\leveltext\'02\'02.;}{\levelnumbers\'01;}\jclisttab\tx0}
+{\listlevel\levelnfc3\leveljc0\levelstartat1{\leveltext\'02\'03.;}{\levelnumbers\'01;}\jclisttab\tx0}
+{\listlevel\levelnfc2\leveljc0\levelstartat1{\leveltext\'02\'04.;}{\levelnumbers\'01;}\jclisttab\tx0}
+{\listlevel\levelnfc1\leveljc0\levelstartat1{\leveltext\'02\'05.;}{\levelnumbers\'01;}\jclisttab\tx0}
+{\listlevel\levelnfc0\leveljc0\levelstartat1{\leveltext\'02\'06.;}{\levelnumbers\'01;}\jclisttab\tx0}
+{\listlevel\levelnfc4\leveljc0\levelstartat1{\leveltext\'02\'07.;}{\levelnumbers\'01;}\jclisttab\tx0}
+{\listlevel\levelnfc23\leveljc1\levelstartat1{\leveltext\'01\'B7;}{\levelnumbers;}\f1\jclisttab\tx0}\listid1 }}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}
+{\*\generator Riched20 10.0.16299}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang22 DEFINI\'c7\'d5ES\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1 define NUM_FANTASMA   5  - Quantidade m\'e1xima de fantasmas.\par
+{\pntext\f1\'B7\tab}define LINHA_LAB  31 - Quantidade de linhas do labirinto, com mais um.\par
+{\pntext\f1\'B7\tab}define COLUNA_LAB 101 - Quantidade de colunas do labirinto, com mais um.\par
+{\pntext\f1\'B7\tab}define PROBDIRECAOFANTASMA 50 - Porcentagem de chance de os fantasmas calcularem a menor distancia at\'e9 o pacman, podendo o n\'famero ser mudado.\par
+
+\pard\sa200\sl276\slmult1\par
+ESTRUTURAS\par
+
+\pard 
+{\listtext\f0\u10625?\tab}\ls1\fi-360\li720\sa200\sl276\slmult1 Estrutura COORDENADA, possui os inteiros x e y, servindo ent\'e3o para informar as posi\'e7\'f5es no labirinto.\par
+
+\pard 
+{\listtext\f0\u10625?\tab}\ls1\ilvl8\fi-360\li720\sa200\sl276\slmult1 typedef enum DIRECOES, possui todas as teclas de movimento, a tecla de parar o pacman e o pause do jogo todo.  Sendo elas enumeradas de forma que: \par
+
+\pard 
+{\pntext\f0 i.\tab}{\*\pn\pnlvlbody\pnf0\pnindent0\pnstart1\pnlcrm{\pntxta.}}
+\fi-360\li720\sa200\sl276\slmult1 CIMA =  0\par
+{\pntext\f0 ii.\tab} DIREITA   =  1\par
+{\pntext\f0 iii.\tab} ESQUERDA  =  2\par
+{\pntext\f0 iv.\tab} BAIXO  =   3\par
+{\pntext\f0 v.\tab} PARA  =  4\par
+{\pntext\f0 vi.\tab} PAUSE   =  5\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1 Estrutura PACMAN, possui:\par
+
+\pard 
+{\pntext\f0 i.\tab}{\*\pn\pnlvlbody\pnf0\pnindent0\pnstart1\pnlcrm{\pntxta.}}
+\fi-360\li720\sa200\sl276\slmult1 COORDENADA pos  - Informa a posi\'e7\'e3o x e y do pacman a cada intera\'e7\'e3o.\par
+{\pntext\f0 ii.\tab}inteiro vidas - Guarda a quantidade de vidas do pacman, decrementando tal conforme \'e9 comido pelos fantasmas, at\'e9 restar 0 que \'e9 quando o jogo finaliza tamb\'e9m.\par
+{\pntext\f0 iii.\tab}inteiro poder - Guarda a informa\'e7\'e3o de poder ativado (representado pelo n\'famero 1) e poder desativado (representado pelo n\'famero 0). Come\'e7a o jogo com ele no zero e fica em 1 quando o pacman come uma das bolachinhas especiais (a qual da o poder), ficando em 1 somente pelo tempo de dura\'e7\'e3o do poder ( 5 segundos), voltando para zero assim que acaba.\par
+{\pntext\f0 iv.\tab}inteiro score - Come\'e7ando em 0, guarda a quantidade de pontos que o pacman faz ao longo do jogo. Somando nele cada bolachinha ou fantasma que o pacman consumiu.  Mostrando tanto ao longo do jogo no menu score, quando no final depois que o pacman morre definitivamente.\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1 Estrutura FANTASMA, possui\par
+
+\pard 
+{\pntext\f0 i.\tab}{\*\pn\pnlvlbody\pnf0\pnindent0\pnstart1\pnlcrm{\pntxta.}}
+\fi-360\li720\sa200\sl276\slmult1 COORDENADA pos - Informa a posi\'e7\'e3o x e y dos fantasmas a cada intera\'e7\'e3o.\par
+{\pntext\f0 ii.\tab}inteiro dir_fant - Salva a dire\'e7\'e3o de cada fantasma, mandando tal para um switch que verificara para qual lado o fantasma se moveu, fazendo as devidas altera\'e7\'f5es nas coordenadas.\par
+
+\pard\sa200\sl276\slmult1\par
+FUN\'c7\'d5ES\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1 void desenha_menu () - Desenha as bordas do jogo, com tamanho de 34 linhas e 104 colunas (maior que o tamanho maximo do jogo). Coloca tamb\'e9m as palavras " Score: " e "Vidas : " dispostas na borda superior, onde ir\'e3o posteriormente as atualiz\'f5es de tais a cada intera\'e7\'e3o.\par
+{\pntext\f1\'B7\tab}void entrada_jogo () - Faz uma breve entrada sobre as teclas de movimenta\'e7\'e3o e de uso durante o jogo. Sendo elas: \par
+
+\pard 
+{\pntext\f0 i.\tab}{\*\pn\pnlvlbody\pnf0\pnindent0\pnstart1\pnlcrm{\pntxta.}}
+\fi-360\li720\sa200\sl276\slmult1 W - movimento vertical,  no sentido para cima.\par
+{\pntext\f0 ii.\tab}A - movimento horizontal, no sentido para a esquerda.\par
+{\pntext\f0 iii.\tab}S - movimento vertical, no sentido para baixo.\par
+{\pntext\f0 iv.\tab}D - movimento horizontal, no sentido para a direita.\par
+{\pntext\f0 v.\tab}X - bot\'e3o que faz o pacmam parar na posi\'e7\'e3o atual, mas a qualquer tecla de movimenta\'e7\'e3o pressionada, continua normalmente.\par
+{\pntext\f0 vi.\tab}P - bot\'e3o que pausa o jogo, parando tanto o pacman quanto os fantasmas, continuando normalmente ap\'f3s qualquer tecla de movimenta\'e7ao pressionada.\par
+{\pntext\f0 vii.\tab}ENTER - para iniciar o jogo.\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\sa200\sl276\slmult1 int traduz_teclas() - Recebe uma tecla atrav\'e9s do getch(), usa toupper()  e a "traduz", ou seja, ve o que ela significa atraves do switch e retorna para a fun\'e7\'e3o. Por exemplo, se a pessoa pressionar a tecla "D",  vai mandar para o case "if(tecla == "D")" e vai dar um "return DIREITA".\par
+{\pntext\f1\'B7\tab}void posicao_pacman (PACMAN *jogador, char matriz_lab[LINHA_LAB][COLUNA_LAB]) - Procura a posi\'e7\'e3o inicial do pacman na matriz que contem o labirinto atraves de um while, quando o encontra printa ele na dada posi\'e7\'e3o e finaliza a fun\'e7\'e3o.\par
+{\pntext\f1\'B7\tab}int move_pacman - Seu principal objetivo \'e9 mover o pacman, retornando 1 (se a dire\'e7\'e3o setada \'e9 possivel, ou seja, se nao ha paredes na frente) e 0 (se \'e9 uma dire\'e7\'e3o invalida), mas faz muitas coisas consequentemente. Primeiramente testa se o pacman esta com sua dire\'e7\'e3o setada em PARA,  caso estiver apenas o printa no mesmo lugar e devolve 1 para a main. Sen\'e3o, atualiza a posi\'e7\'e3o em que esta antes de mudar de lugar, sendo isso feito pela chamada da fun\'e7\'e3o atualiza_jogo. Depois com variaveis temporarias, traduz no switch qual x ou y vai somar ou subtrair (dependendo da dire\'e7\'e3o), resultando em novas coordenadas (porem, lembrando que estas ainda sao temporarias, pois s\'e3o futuras e necessitam de testes para ver se ser\'e3o poss\'edveis).  Pega as variaveis futuras e manda para o testa_parede, se ele retornar que n\'e3o tem parede, quer dizer que \'e9 uma dire\'e7\'e3o possivel ent\'e3o \'e9 atribuido as variaveis temporarias \'e0s coordenadas oficiais do pacman e printado ele nelas. Caso contrario, printa ele no mesmo lugar e retorna 0 para a main.\par
+{\pntext\f1\'B7\tab}int testa_bifurca\'e7\'e3o  (int dir_fant,  int xt,  int yt,  char matriz_lab [LINHA_LAB][COLUNA_LAB]) - Recebendo variaveis temporarias (futuras) dos fantasmas, testa se h\'e1 ou n\'e3o bifurca\'e7\'e3o em sua pr\'f3xima posi\'e7\'e3o. A fu\'e7\'e3o apenas testa em qual dos quatro lados naquele ponto n\'e3o havera paredes, se resultar em mais de dois lados quer dizer que h\'e1 uma bifurca\'e7\'e3o, ent\'e3o retorna 1, sen\'e3o retorna 0.\par
+{\pntext\f1\'B7\tab}int calcula_menor_distancia(PACMAN *jogador, FANTASMA *fantasma) - A partir do calculo matematico da distancia entre dois pontos, usa isso para todas as quatro dire\'e7\'f5es possiveis do fantasma e ve qual \'e9 a que resulta em uma menor distancia em rela\'e7\'e3o ao pacman, retornando tal valor.\par
+{\pntext\f1\'B7\tab}int testa_parede ( int x, int y, char matriz_lab [LINHA_LAB][COLUNA_LAB]) - Recebe um x e um y (uma coordenada) e ve se neste determinado ponto tera parede ('#')  ou acaba o tamanho do mapa. Caso n\'e3o tiver nada de errado, retorna 1, sen\'e3o retorna 0.\par
+{\pntext\f1\'B7\tab}void le_labirinto (char matriz_lab[LINHA_LAB][COLUNA_LAB]) - Abre um arquivo "labirinto.txt" para leitura e salva ele na matriz passada como parametro.\par
+{\pntext\f1\'B7\tab}void printa_labiritno (char matriz_lab[LINHA_LAB][COLUNA_LAB])  - Recebe uma matriz e printa ela na tela.\par
+{\pntext\f1\'B7\tab}void testa_se_pacman_comeu_fantasma (PACMAN *jogador, FANTASMA fantasma [], char matriz_lab[LINHA_LAB][COLUNA_LAB], COORDENADA pos_iniciais_fantasmas []) - Testa se a posi\'e7\'e3o atual do pacman \'e9 igual a posi\'e7\'e3o de qualquer fantasma do mapa, se for o pacman come o fantasma, soma mais 200 pontos no score e o fantasma nasce em sua posi\'e7\'e3o inicial.\par
+{\pntext\f1\'B7\tab}void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char matriz_lab[LINHA_LAB][COLUNA_LAB])  - Testa se a posi\'e7\'e3o atual do pacman \'e9 igual a posi\'e7\'e3o atual de qualquer fantasma do mapa, se for subtrai uma vida e limpa a tela do jogo. Se esta for sua ultima, carrega a tela de game_over e acaba o jogo, caso contrario aparece uma mensagem falando a quantidade de vidas restantes e op\'e7\'e3o de pressionar "enter" para continuar. Quando pressionada a tecla, carrega novamente o labirinto. Setando apenas o pacman em sua posi\'e7\'e3o inicial, os fantasmas continuam normalmente como estavam antes.  Por ultimo, atualiza o score e as vidas das bordas do menu.\par
+{\pntext\f1\'B7\tab}void game_over (PACMAN *jogador) - Aparece uma mensagem na tela falando que acabou o jogo e logo abaixo o seu score.\par
+{\pntext\f1\'B7\tab}void movimenta_todos_os_fantasmas (FANTASMA fantasma[], char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador) - Separa todos os fantasmas enviando um por um para a fun\'e7\'e3o move_fantasma.\par
+{\pntext\f1\'B7\tab}void move_fantasma (FANTASMA *fantasma, char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador) - Apenas atualiza a posi\'e7\'e3o que sera a "antiga" do fantasma, ou seja, printa na posi\'e7\'e3o dele o que havia anteriormente. E chama a dire\'e7\'e3o_movimento_fantasma.\par
+{\pntext\f1\'B7\tab}void direcao_movimento_fantasma (FANTASMA *fantasma, char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador) - Fica dentro de um while enquanto move = 0 (ou seja, enquanto o fantasma n\'e3o ir para uma dire\'e7\'e3o possivel). Primeiramente testa se na posi\'e7\'e3o atual tem uma bifurca\'e7\'e3o, se tiver j\'e1 sorteia uma nova decis\'e3o para futura dire\'e7\'e3o podendo ser ela aleatoria ou a menor distancia ate o pacman. Se aquela dire\'e7\'e3o resultar em posi\'e7\'e3o  possivel move vai ser igual a 1 e a fun\'e7\'e3o acaba, caso contrario come\'e7a os testes novamente at\'e9 cair uma dire\'e7\'e3o poss\'edvel. Se por acaso, naquele lugar n\'e3o tiver uma bifurca\'e7\'e3o, ele vai seguir com a dire\'e7\'e3o antiga, mudando apenas se encontrar uma parede\par
+{\pntext\f1\'B7\tab}void gerador_fantasma  (FANTASMA fantasma[], char matriz_lab[LINHA_LAB][COLUNA_LAB], COORDENADA pos_iniciais_fantasmas []) - Percorre toda a matriz, cada vez que ela acha um 'W' ela cria um dos fantasmas em cima dele e salva sua posi\'e7\'e3o em um vetor de posi\'e7\'f5es iniciais, para quando morrerem futuramente voltarem para elas.\par
+}
+ 
