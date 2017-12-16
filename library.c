@@ -192,7 +192,7 @@ void atualiza_jogo (FANTASMA fantasma [], PACMAN *jogador, char matriz_lab [LINH
         textbackground(BLUE);
         printf("%d", jogador->score);
         textbackground(BLACK);
-        *bolachas_normais -=1;
+        (*bolachas_normais) -=1;
     }
 
     if(matriz_lab[jogador->pos.y - 3][jogador->pos.x - 3] == '*' )
@@ -203,11 +203,11 @@ void atualiza_jogo (FANTASMA fantasma [], PACMAN *jogador, char matriz_lab [LINH
         textbackground(BLUE);
         printf("%d", jogador->score);
         textbackground(BLACK);
-        *bolachas_especiais -=1;
+        (*bolachas_especiais) -=1;
         jogador->poder = 1;
     }
 
-    if(bolachas_especiais == 0 && bolachas_especiais == 0) //se retornar 1 quer dizer que o jogo acabou.
+    if(*bolachas_especiais == 0 && *bolachas_normais == 0) //se retornar 1 quer dizer que o jogo acabou.
     {
         fflush(stdin);
         system("cmd /c cls");
