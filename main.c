@@ -56,6 +56,8 @@ int main ()
         textbackground(BLUE);
         printf("%d", jogador.vidas);
         textbackground(BLACK);
+        bolachas_normais = 1;
+        bolachas_especiais = 1;
 
         do
         {
@@ -157,7 +159,7 @@ int main ()
             }
 
         }
-        while(jogador.vidas > 0);
+        while(jogador.vidas > 0 && (bolachas_especiais > 0 || bolachas_normais > 0));
 
 
     }

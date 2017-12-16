@@ -192,7 +192,7 @@ void atualiza_jogo (FANTASMA fantasma [], PACMAN *jogador, char matriz_lab [LINH
         textbackground(BLUE);
         printf("%d", jogador->score);
         textbackground(BLACK);
-        bolachas_normais --;
+        *bolachas_normais -=1;
     }
 
     if(matriz_lab[jogador->pos.y - 3][jogador->pos.x - 3] == '*' )
@@ -203,13 +203,14 @@ void atualiza_jogo (FANTASMA fantasma [], PACMAN *jogador, char matriz_lab [LINH
         textbackground(BLUE);
         printf("%d", jogador->score);
         textbackground(BLACK);
-        bolachas_especiais --;
+        *bolachas_especiais -=1;
         jogador->poder = 1;
     }
 
-    if(testa_se_jogo_acabou(matriz_lab) == 1) //se retornar 1 quer dizer que o jogo acabou.
+    if(bolachas_especiais == 0 && bolachas_especiais == 0) //se retornar 1 quer dizer que o jogo acabou.
     {
-        system("cls");
+        fflush(stdin);
+        system("cmd /c cls");
         printf("vc ganhou, otario.");
         continua_jogo = getch();
         printf("ACAAAAAAAAAAAAAAAAAAAAABO");
@@ -600,7 +601,7 @@ int conta_bolachas_normais (char matriz_lab[LINHA_LAB][COLUNA_LAB])
     {
         for(coluna = 0; coluna < COLUNA_LAB; coluna ++)
         {
-            if(matriz_lab[linha][coluna] == 'o');
+            if(matriz_lab[linha][coluna] == 'o')
             bolachas_normais ++;
         }
     }
@@ -621,7 +622,7 @@ int conta_bolachas_especiais (char matriz_lab[LINHA_LAB][COLUNA_LAB])
     {
         for(coluna = 0; coluna < COLUNA_LAB; coluna ++)
         {
-            if(matriz_lab[linha][coluna] == '*');
+            if(matriz_lab[linha][coluna] == '*')
             bolachas_especiais ++;
         }
     }
