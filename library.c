@@ -207,13 +207,23 @@ void atualiza_jogo (FANTASMA fantasma [], PACMAN *jogador, char matriz_lab [LINH
         jogador->poder = 1;
     }
 
-    if(*bolachas_especiais == 0 && *bolachas_normais == 0) //se retornar 1 quer dizer que o jogo acabou.
+    if(*bolachas_especiais < 1 && *bolachas_normais < 1) //se retornar 1 quer dizer que o jogo acabou.
     {
         fflush(stdin);
         system("cmd /c cls");
-        printf("vc ganhou, otario.");
-        continua_jogo = getch();
-        printf("ACAAAAAAAAAAAAAAAAAAAAABO");
+        textbackground(YELLOW);
+        gotoxy(45, 20);
+        printf("PARABENS, VOCE GANHOU!");
+        gotoxy(47, 22);
+        textbackground(BLACK);
+        textcolor(YELLOW);
+        printf("Seu score foi: %d", jogador->score);
+        gotoxy(41, 26);
+        printf("Pressione enter para continuar");
+        do
+        {
+           continua_jogo = getch();
+        }while(continua_jogo != 13);
     }
 }
 
@@ -714,10 +724,13 @@ void game_over (PACMAN *jogador)
     gotoxy(35, 18);
     textbackground(YELLOW);
     textcolor(BLACK);
-    printf("ACABARAM SUAS VIDAS, TENTE NOVAMENTE MAIS TARDE.");
+    printf("ACABARAM SUAS VIDAS, LAMENTO.");
     gotoxy(50, 20);
-    printf("Seu score foi: %d", jogador->score);
     textbackground(BLACK);
+    textcolor(YELLOW);
+    printf("Seu score foi: %d", jogador->score);
+    gotoxy(45, 28);
+    printf("Pressione enter para continuar.");
     textcolor(WHITE);
 }
 

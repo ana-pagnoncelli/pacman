@@ -13,19 +13,20 @@ int main ()
     int direcao, direcaoT, direcaoAnt;
     int inicia_jogo;
     FANTASMA fantasma[NUM_FANTASMA];
-    int linha,coluna, encontrado = 0;
+    int linha,coluna, encontrado;
     PACMAN jogador;
-    int bolachas_normais = 0, bolachas_especiais = 0, i;
+    int bolachas_normais, bolachas_especiais, i;
     COORDENADA pos_iniciais_fantasmas [NUM_FANTASMA];
-    int rep_pacman, rep_fant = 0;
+    int rep_fant;
     char resposta;
 
     do
     {
-
+        encontrado = 0;
         system("cls");
         jogador.vidas = 2;
         jogador.score = 0;
+        jogador.poder = 0;
 
         /*
         Seto a posicao deles inicial para uma direcao qualquer,
@@ -42,8 +43,10 @@ int main ()
 
         desenha_menu();
         entrada_jogo();
-        inicia_jogo = getch();
-
+        do
+        {
+           inicia_jogo = getch();
+        }while(inicia_jogo != 13);
 
         if(inicia_jogo == 13)
         {
@@ -61,8 +64,6 @@ int main ()
             textbackground(BLUE);
             printf("%d", jogador.vidas);
             textbackground(BLACK);
-            bolachas_normais = 1;
-            bolachas_especiais = 1;
 
             do
             {
@@ -189,6 +190,9 @@ int main ()
     }
     while(resposta != 'N');
 
+system("cls");
+gotoxy(50, 17);
+printf("ATE MAIS!");
     gotoxy(35, 35);
     return 0;
 }
