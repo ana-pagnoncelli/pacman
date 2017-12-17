@@ -2,12 +2,13 @@
 #include <conio2.h>
 #include <windows.h>
 #include <time.h>
+#include <string.h>
 #define NUM_FANTASMA 5
-#define BLUE 9
 #define LINHA_LAB 31
 #define COLUNA_LAB 101
 #include <math.h>
 #define PROBDIRECAOFANTASMA 50
+#define DESLOCAMENTO 3 // CONSTANTE DE DESLOCAMENTO DO MAPA POR CONTA DAS BORDAS
 
 typedef struct
 {

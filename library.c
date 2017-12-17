@@ -1,11 +1,9 @@
-#include <stdio.h>
 #include "library.h"
-#include <conio2.h>
-#include <windows.h>
-#include <time.h>
-#include <string.h>
 
-/*Basicamente desenha as bordas do menu. Sendo elas maiores que as dimensões do jogo.*/
+/*
+    Basicamente desenha as bordas do menu, colocando espaços em branco coloridos.
+    Sendo elas maiores que as dimensões do jogo.
+*/
 
 void desenha_menu()
 {
@@ -32,8 +30,9 @@ void desenha_menu()
 
 }
 
-/* Desenha uma entrada, onde vc tem a opcao de começar e futuramente as teclas de movimento
-o que cada uma faz, etc. */
+/*
+    Desenha uma entrada, com instruções de quais teclas usar e o que elas fazem.
+*/
 
 void entrada_jogo()
 {
@@ -60,8 +59,10 @@ void entrada_jogo()
 
 }
 
-/*Recebe atraves do kbhit uma tecla e define o que ela significa,
-a principio serve só para a movimentação do pacman.*/
+/*
+    Recebe atraves do kbhit uma tecla e define o que ela significa,
+    usado na movimentação do pacman.
+*/
 
 int traduz_teclas ()
 {
@@ -83,24 +84,26 @@ int traduz_teclas ()
     return 9; //default
 }
 
-/*Recebe um jogador e uma matriz, a partir disso procura na matriz a posicao em
-que o pacman(a letra 'C') se encontra e quando acha passa a posição para o jogador. */
+/*
+    Recebe um jogador e uma matriz, a partir disso procura na matriz a posição em
+    que o pacman(a letra 'C') se encontra e quando acha passa a posição para o jogador.
+*/
 
 void posicao_pacman(PACMAN *jogador, char matriz_lab[LINHA_LAB][COLUNA_LAB])
 {
     int encontrado = 0, linha = 0, coluna = 0;
 
-    while(encontrado == 0 && linha < LINHA_LAB)
+    while(encontrado == 0 && linha < LINHA_LAB) //PASSA PELA MATRIZ ENQUANDO NÃO ACHA O PACMAN OU A MATRIZ NAO ACABA
     {
         while(encontrado == 0 && coluna < COLUNA_LAB)
         {
-            if(matriz_lab[linha][coluna] == 'C')
+            if(matriz_lab[linha][coluna] == 'C') //QUANDO ACHA O PACMAN
             {
-                jogador->pos.x = coluna + 3;
-                jogador->pos.y = linha + 3;
+                jogador->pos.x = coluna + DESLOCAMENTO; //SALVA SUAS COORDENADAS
+                jogador->pos.y = linha + DESLOCAMENTO;
                 textbackground(YELLOW);
-                putchxy(coluna + 3, linha + 3, 'C');
-                encontrado = 1;
+                putchxy(coluna + DESLOCAMENTO, linha + DESLOCAMENTO, 'C'); //PRINTA ELE NO LUGAR ACHADO
+                encontrado = 1; //E FINALIZA O WHILE
             }
             coluna ++;
         }
@@ -110,18 +113,21 @@ void posicao_pacman(PACMAN *jogador, char matriz_lab[LINHA_LAB][COLUNA_LAB])
 
 }
 
-/*Recebe um jogador (para ter acesso as posicoes setadas no posicao_pacman e para modifica-lo
-atraves de ponteiros, para a proxima posicao), uma direção (recebida atraves do kbhit na main
-e traduzida pelo traduz_teclas) e a matriz (para passarmos para o testa parede para ver se na proxima
-posição do pacman vai ter parede ou nao). Basicamente vai excluindo o pacman da posicao antiga e
-desenhando na nova SE POSSIVEL.*/
+/*
+    Recebe um jogador (para ter acesso as posicoes setadas no posicao_pacman e para modifica-lo
+    atraves de ponteiros, para a proxima posicao), uma direção (recebida atraves do kbhit na main
+    e traduzida pelo traduz_teclas) e a matriz (para passarmos para o testa parede para ver se na proxima
+    posição do pacman vai ter parede ou nao). Basicamente vai excluindo o pacman da posicao antiga e
+    desenhando na nova SE POSSÍVEL.
+*/
 
 int move_pacman (FANTASMA fantasma [], PACMAN *jogador, int direcao, int direcaoAnt, char matriz_lab[LINHA_LAB][COLUNA_LAB], int *bolachas_especiais, int *bolachas_normais)
 {
-    int xt, yt; //x e y temporarios.
-    int certo = 0;
+    int xt, yt; //X E Y TEMPORARIOS
+    int certo = 0; //MOSTRA SE O MOVIMENTO É POSSIVEL OU NÃO. SE FOR 1 QUER DIZER QUE É POSSIVEL E SE FOR 0 NÃO É POSSIVEL.
+    //COMEÇA CONSIDERANDO QUE O MOVIMENTO NÃO É POSSIVEL, MUDANDO CASO PASSE PELOS TESTES.
 
-    if(direcao == PARA)
+    if(direcao == PARA) //SE A DIREÇÃO PASSADA FOR "PARA", NEM CONTINUA, APENAS O PRINTA NO MESMO LUGAR
     {
         textbackground(YELLOW);
         textcolor(BLACK);
@@ -131,9 +137,9 @@ int move_pacman (FANTASMA fantasma [], PACMAN *jogador, int direcao, int direcao
         atualiza_jogo (fantasma, jogador, matriz_lab, bolachas_normais, bolachas_especiais, direcao);
     }
 
-    else
+    else //SENÃO EXECUTA TODA A FUNÇÃO
     {
-        xt = jogador->pos.x;
+        xt = jogador->pos.x;// USA VARIAVEIS TEMPORARIAS PARA FAZER OS TESTES FUTUROS
         yt = jogador->pos.y;
 
         textbackground(BLACK);
@@ -157,12 +163,19 @@ int move_pacman (FANTASMA fantasma [], PACMAN *jogador, int direcao, int direcao
         }
         textbackground(BLACK);
 
+        /*
+            Testa se no lugar futuro tera paredes.
+            Caso não tiver entra no if e atribui as variaveis temporarias nas variaveis oficiais do pacman o printando depois no proximo espaço.
+            E volta para a main retornando 1, mostrando que o movimento foi possível.
+            Caso tiver, apenas o printa no mesmo lugar e volta pra main retornando 0, significando que o movimento não foi possivel
+        */
+
         if(testa_parede(xt, yt, matriz_lab) == 1)
         {
             putchxy(jogador->pos.x, jogador->pos.y, ' ');
             jogador->pos.x = xt;
             jogador->pos.y = yt;
-            certo = 1;
+            certo = 1; // MOVIMENTO POSSIVEL
         }
 
         textbackground(YELLOW);
@@ -171,77 +184,71 @@ int move_pacman (FANTASMA fantasma [], PACMAN *jogador, int direcao, int direcao
         textbackground(BLACK);
     }
     gotoxy(1,1);
-    return certo;
+
+    return certo; // RETORNA SE O MOVIMENTO FOI POSSIVEL OU NÃO
 
 }
 
 void atualiza_jogo (FANTASMA fantasma [], PACMAN *jogador, char matriz_lab [LINHA_LAB][COLUNA_LAB], int *bolachas_normais, int *bolachas_especiais, int direcao)
 {
-    int continua_jogo;
+    int continua_jogo; //VARIAVEL PARA SER USADA EM CASOS QUE O JOGADOR ACABA COM O NUMERO DE BOLACHAS E GANHA O JOGO
 
-    if (jogador->pos.y - 3 >= LINHA_LAB || jogador->pos.y - 3 < 0 || jogador->pos.x - 3>= COLUNA_LAB || jogador->pos.x - 3 < 0)
+    if (jogador->pos.y - DESLOCAMENTO >= LINHA_LAB || jogador->pos.y - DESLOCAMENTO < 0 || jogador->pos.x - DESLOCAMENTO>= COLUNA_LAB || jogador->pos.x - DESLOCAMENTO < 0)
     {
         return;
     }
 
-    if(matriz_lab[jogador->pos.y - 3][jogador->pos.x - 3] == 'o') //cada vez que come uma bolachinha poe um espaço branco na matriz
+    /*
+        Cada vez que o pacman come uma das bolachas põe um espaço em branco na matriz, senão o fantasma desenha de novo e em
+        usos futuros da matriz pode apresentar problemas. Além disso, soma no score a potuação de cada uma e decrementa do total de bolachas uma.
+        Tudo isso se havia uma bolacha na posição em que o pacman estava.
+    */
+
+    if(matriz_lab[jogador->pos.y - DESLOCAMENTO][jogador->pos.x - DESLOCAMENTO] == 'o') //cada vez que come uma bolachinha poe um espaço branco na matriz
     {
-        matriz_lab[jogador->pos.y - 3][jogador->pos.x - 3] = ' ';//senao o fantasma desenha de novo.
+        matriz_lab[jogador->pos.y - DESLOCAMENTO][jogador->pos.x - DESLOCAMENTO] = ' ';//senao o fantasma desenha de novo.
         jogador->score = 10 + jogador->score;
         gotoxy(12, 1);
         textbackground(BLUE);
+        textcolor(WHITE);
         printf("%d", jogador->score);
         textbackground(BLACK);
         (*bolachas_normais) -=1;
     }
 
-    if(matriz_lab[jogador->pos.y - 3][jogador->pos.x - 3] == '*' )
+    if(matriz_lab[jogador->pos.y - DESLOCAMENTO][jogador->pos.x - DESLOCAMENTO] == '*' )
     {
-        matriz_lab[jogador->pos.y - 3][jogador->pos.x - 3] = ' ';
+        matriz_lab[jogador->pos.y - DESLOCAMENTO][jogador->pos.x - DESLOCAMENTO] = ' ';
         jogador->score = 50 + jogador->score;
         gotoxy(12, 1);
         textbackground(BLUE);
+        textcolor(WHITE);
         printf("%d", jogador->score);
         textbackground(BLACK);
         (*bolachas_especiais) -=1;
         jogador->poder = 1;
     }
 
-    if(*bolachas_especiais < 1 && *bolachas_normais < 1) //se retornar 1 quer dizer que o jogo acabou.
+    if(*bolachas_especiais < 1 && *bolachas_normais < 1) //TESTA SE AINDA TEM BOLACHAS NO JOGO
     {
         fflush(stdin);
-        system("cmd /c cls");
+        system("cmd /c cls"); //CASO NÃO TIVER, LIMPA A TELA E ACABA O JOGO
         textbackground(YELLOW);
         gotoxy(45, 20);
         printf("PARABENS, VOCE GANHOU!");
         gotoxy(47, 22);
         textbackground(BLACK);
         textcolor(YELLOW);
-        printf("Seu score foi: %d", jogador->score);
+        printf("Seu score foi: %d", jogador->score); //PRINTA O SCORE
         gotoxy(41, 26);
         printf("Pressione enter para continuar");
         do
         {
-           continua_jogo = getch();
-        }while(continua_jogo != 13);
-    }
-}
-
-int testa_se_jogo_acabou (char matriz_lab [LINHA_LAB][COLUNA_LAB])
-{
-    int linha, coluna;
-
-    for(linha = 0; linha < LINHA_LAB; linha ++)
-    {
-        for(coluna = 0; coluna < COLUNA_LAB; coluna ++)
-        {
-            if(matriz_lab[linha][coluna] == 'o' || matriz_lab[linha][coluna] == '*' );
-            return 0;
+            continua_jogo = getch(); //ESPERA ATÉ QUE O JOGADOR APERTE ENTER PARA CONTINUAR
         }
+        while(continua_jogo != 13);
     }
-    return 1;
 }
-
 
 void SetConsoleSize(unsigned largura, unsigned altura) //aumenta tamanho da tela, funcao do moodle
 {
@@ -263,55 +270,61 @@ void SetConsoleSize(unsigned largura, unsigned altura) //aumenta tamanho da tela
 
 void move_fantasma (FANTASMA *fantasma, char matriz_lab [LINHA_LAB][COLUNA_LAB], PACMAN *jogador)
 {
-    int x, y;
+    int x, y; // COORDENADAS TEMPORARIAS
 
-    x = fantasma->pos.x ;
+    x = fantasma->pos.x;//SALVA AS COORDENADAS DO PACMAN EM VARIAVEIS TEMPORARIAS
     y = fantasma->pos.y;
 
     textbackground(BLACK);
-    if (y-3 >= LINHA_LAB || y-3 < 0 || x-3>= COLUNA_LAB || x-3 < 0)
+    if (y-DESLOCAMENTO >= LINHA_LAB || y-DESLOCAMENTO < 0 || x-DESLOCAMENTO>= COLUNA_LAB || x-DESLOCAMENTO < 0)
     {
         return;
     }
-    if(matriz_lab[y-3][x-3] == 'o' ) //quando o fantasma passa por cima dos espaços q contem bolachinhas
+    /*
+        Fantasma sempre printa atrás dele exatamente o que tinha na matriz no momento em que passou por cima.
+    */
+
+    if(matriz_lab[y-DESLOCAMENTO][x-DESLOCAMENTO] == 'o' )
     {
         textcolor(WHITE);
-        putchxy(x, y, 'o'); //desenha elas de novo
+        putchxy(x, y, 'o');
 
     }
-    if(matriz_lab[y-3][x-3] == '*')
+    if(matriz_lab[y-DESLOCAMENTO][x-DESLOCAMENTO] == '*')
     {
         textcolor(WHITE);
         putchxy(x, y, '*');
     }
 
-    if(matriz_lab[y-3][x-3] == ' ' || matriz_lab[y-3][x-3] == 'W' || matriz_lab[y-3][x-3] == 'C' )
+    if(matriz_lab[y-DESLOCAMENTO][x-DESLOCAMENTO] == ' ' || matriz_lab[y-DESLOCAMENTO][x-DESLOCAMENTO] == 'W' || matriz_lab[y-DESLOCAMENTO][x-DESLOCAMENTO] == 'C' )
     {
         putchxy(x, y, ' ');
     }
 
     textcolor(BLACK);
 
-    direcao_movimento_fantasma(fantasma, matriz_lab, jogador);
+    direcao_movimento_fantasma(fantasma, matriz_lab, jogador); //AQUI É ONDE REALMENTE FAZ TODA A PARTE DE DIRECIONAMENTO DOS FANTASMAS, QUANDO RETORNA SO FAZ O MOVIMENTO
 
     textbackground(RED);
     if(jogador->poder == 1)
     {
         textbackground(GREEN);
-        putchxy(fantasma->pos.x, fantasma->pos.y, 'w');
+        putchxy(fantasma->pos.x, fantasma->pos.y, 'w');// PRINTA O FANTASMA NA NOVA POSIÇÃO COMO 'w'  SE O PODER DO PACMAN ESTA ATIVADO
     }
     else
     {
-        putchxy(fantasma->pos.x, fantasma->pos.y, 'W');
+        putchxy(fantasma->pos.x, fantasma->pos.y, 'W'); //OU COMO 'W' SE O PODER DO PACMAN ESTA DESATIVADO
     }
     textbackground(BLACK);
 
 }
 
-
+/*
+    Testa se no determinado x e y tem '#' (parede) ou se esta nos limites do mapa
+*/
 int testa_parede (int x, int y, char matriz_lab [LINHA_LAB][COLUNA_LAB])
 {
-    if(x>101 || y>31 || x <= 2 || y <= 3 || matriz_lab[y-3][x-3] == '#')
+    if(x>101 || y>31 || x <= 2 || y <= 3 || matriz_lab[y-DESLOCAMENTO][x-DESLOCAMENTO] == '#')
         return 0;
 
     else
@@ -512,12 +525,12 @@ void gerador_fantasma (FANTASMA fantasma[], char matriz_lab[LINHA_LAB][COLUNA_LA
         {
             if(matriz_lab[linha][coluna] == 'W')
             {
-                fantasma[i].pos.x = coluna + 3;
-                pos_iniciais_fantasmas[i].x = coluna + 3; //guarda a posicao x em que o fantasma nasceu
-                fantasma[i].pos.y = linha + 3;
-                pos_iniciais_fantasmas[i].y = linha + 3;//guarda a posicao y em que o fantasma nasceu
+                fantasma[i].pos.x = coluna + DESLOCAMENTO;
+                pos_iniciais_fantasmas[i].x = coluna + DESLOCAMENTO; //guarda a posicao x em que o fantasma nasceu
+                fantasma[i].pos.y = linha + DESLOCAMENTO;
+                pos_iniciais_fantasmas[i].y = linha + DESLOCAMENTO;//guarda a posicao y em que o fantasma nasceu
                 textbackground(RED);
-                putchxy(coluna + 3, linha + 3, 'W');
+                putchxy(coluna + DESLOCAMENTO, linha + DESLOCAMENTO, 'W');
                 encontrado ++;
                 i++;
             }
@@ -541,7 +554,7 @@ void movimenta_todos_fastasmas (FANTASMA fantasma[], char matriz_lab [LINHA_LAB]
 }
 
 /*
-Salva o labirinto.txt em em uma matriz.
+    Salva o labirinto.txt em em uma matriz.
 */
 void le_labirinto (char matriz_lab[LINHA_LAB][COLUNA_LAB])
 {
@@ -567,8 +580,8 @@ void le_labirinto (char matriz_lab[LINHA_LAB][COLUNA_LAB])
     fclose(arq);
 }
 /*
-Printa o labirinto que foi salvo na matriz, ao mesmo tempo colorindo as paredes e bolachas e tirando os W e C da tela,
-para que quando a funcao for chamada novamente nao printe eles.
+    Printa o labirinto que foi salvo na matriz, ao mesmo tempo colorindo as paredes e bolachas e tirando os W e C da tela,
+    para que quando a funcao for chamada novamente nao printe eles.
 */
 void printa_labirinto(char matriz_lab[LINHA_LAB][COLUNA_LAB])
 {
@@ -576,7 +589,7 @@ void printa_labirinto(char matriz_lab[LINHA_LAB][COLUNA_LAB])
 
     for(linha = 0; linha < LINHA_LAB; linha ++)
     {
-        gotoxy(3, 3 + linha);
+        gotoxy(DESLOCAMENTO, DESLOCAMENTO + linha);
         for(coluna = 0; coluna < COLUNA_LAB; coluna ++)
         {
             if(matriz_lab[linha][coluna] != 'W' && matriz_lab[linha][coluna] != 'C')
@@ -600,8 +613,8 @@ void printa_labirinto(char matriz_lab[LINHA_LAB][COLUNA_LAB])
 }
 
 /*
-Conta a quantidade de bolachas normais no mapa, passando um for pela matriz toda.
-Quando acaba, devolve o valor para a main.
+    Conta a quantidade de bolachas normais no mapa, passando um for pela matriz toda.
+    Quando acaba, devolve o valor para a main.
 */
 int conta_bolachas_normais (char matriz_lab[LINHA_LAB][COLUNA_LAB])
 {
@@ -612,7 +625,7 @@ int conta_bolachas_normais (char matriz_lab[LINHA_LAB][COLUNA_LAB])
         for(coluna = 0; coluna < COLUNA_LAB; coluna ++)
         {
             if(matriz_lab[linha][coluna] == 'o')
-            bolachas_normais ++;
+                bolachas_normais ++;
         }
     }
 
@@ -620,8 +633,8 @@ int conta_bolachas_normais (char matriz_lab[LINHA_LAB][COLUNA_LAB])
 }
 
 /*
-Conta a quantidade de bolachas especiais no mapa, passando um for pela matriz toda.
-Quando acaba, devolve o valor para a main.
+    Conta a quantidade de bolachas especiais no mapa, passando um for pela matriz toda.
+    Quando acaba, devolve o valor para a main.
 */
 
 int conta_bolachas_especiais (char matriz_lab[LINHA_LAB][COLUNA_LAB])
@@ -633,7 +646,7 @@ int conta_bolachas_especiais (char matriz_lab[LINHA_LAB][COLUNA_LAB])
         for(coluna = 0; coluna < COLUNA_LAB; coluna ++)
         {
             if(matriz_lab[linha][coluna] == '*')
-            bolachas_especiais ++;
+                bolachas_especiais ++;
         }
     }
 
@@ -641,10 +654,9 @@ int conta_bolachas_especiais (char matriz_lab[LINHA_LAB][COLUNA_LAB])
 }
 
 /*
-Recebe um jogador e os cinco fantasmas, testando um por um se estao na mesma posicao que o jogador.
-Caso estejam o pacman perde uma vida, aprecendo uma mensagem na tela. Se for a ultima vida do pacman, chama a função
-game_over e o while da função main fica falso, acabando o jogo. Se tiver ainda vidas, apertando enter vc continua
-partindo da posicao inicial, setada pela chamada da funcao posicao_pacman.
+    Recebe um jogador e os cinco fantasmas, testando um por um se estao na mesma posicao que o jogador.
+    Caso estejam o pacman perde uma vida, aprecendo uma mensagem na tela. Se for a ultima vida do pacman, chama a função
+    game_over e o while da função main fica falso, acabando o jogo.
 */
 void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char matriz_lab[LINHA_LAB][COLUNA_LAB])
 {
@@ -652,18 +664,17 @@ void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char 
 
     for(i = 0; i < NUM_FANTASMA; i++)
     {
-        if(jogador -> pos.y == fantasma[i].pos.y && jogador -> pos.x == fantasma[i].pos.x) //testa se estao na mesma posicao
+        if(jogador -> pos.y == fantasma[i].pos.y && jogador -> pos.x == fantasma[i].pos.x) //TESTA SE ESTÃO NA MESMA POSIÇÃO
         {
-            system("cls");
-            jogador->vidas --; //atualiza a quantidade de vidas
+            system("cls"); //CASO ESTIVEREM, LIMPA A TELA
+            jogador->vidas --; //DIMINUI O NUMERO DE VIDAS DO PACMAN
 
-            if(jogador->vidas <= 0) //testa se era a ultima vida do pacman
+            if(jogador->vidas <= 0) //TESTA SE ERA A ÚLTIMA VIDA DO PACMAN
             {
-                game_over (jogador); //se era acabou o jogo
+                game_over (jogador); //SE ERA ACABOU O JOGO
             }
-            else //senao continua
+            else //SENÃO TEM A OPÇÃO DE CONTINUAR
             {
-
                 gotoxy(12, 8);
                 textbackground(YELLOW);
                 textcolor(BLACK);
@@ -673,64 +684,62 @@ void testa_se_fantasma_comeu_pacman(PACMAN *jogador, FANTASMA fantasma [], char 
                 desenha_menu();
                 textbackground(BLACK);
                 textcolor(WHITE);
-
             }
 
-                do
+            do
+            {
+                continua_jogo = getch(); //ESPERA ATÉ QUE O JOGADOR APERTE ENTER PARA CONTINUAR O JOGO
+                if(continua_jogo == 13)
                 {
-                    continua_jogo = getch();
-                    if(continua_jogo == 13)
-                    {
-                        printa_labirinto(matriz_lab);
-                        posicao_pacman(jogador, matriz_lab); //seta o pacman na posicao inicial
-                        textbackground(BLUE);
-                        gotoxy(32, 1);
-                        printf("%d", jogador->vidas);
-                        gotoxy(12, 1);
-                        printf("%d", jogador->score);
-                        textbackground(BLACK);
-                    }
+                    printa_labirinto(matriz_lab); //PRINTA O LABIRINTO DE NOVO
+                    posicao_pacman(jogador, matriz_lab); //PÕE O PACMAN NA POSIÇÃO INICIAL
+                    textbackground(BLUE);
+                    gotoxy(32, 1);
+                    printf("%d", jogador->vidas); //PRINTA A VIDA
+                    gotoxy(12, 1);
+                    printf("%d", jogador->score); //RINTA O SCORE
+                    textbackground(BLACK);
                 }
-                while (continua_jogo != 13);
-
             }
+            while (continua_jogo != 13);
+
         }
     }
+}
 
 void testa_se_pacman_comeu_fantasma (PACMAN *jogador, FANTASMA fantasma [], char matriz_lab[LINHA_LAB][COLUNA_LAB], COORDENADA pos_iniciais_fantasmas [])
 {
     int i;
 
-    for(i = 0; i < NUM_FANTASMA; i++)
+    for(i = 0; i < NUM_FANTASMA; i++) //TESTA SE ALGUM DOS FANTASMAS ESTA NA MESMA POSIÇÃO QUE O PACMAN
     {
-        if(jogador -> pos.y == fantasma[i].pos.y && jogador -> pos.x == fantasma[i].pos.x)
+        if(jogador -> pos.y == fantasma[i].pos.y && jogador -> pos.x == fantasma[i].pos.x)//CASO ESTIVER
         {
             textbackground(GREEN);
             putchxy(pos_iniciais_fantasmas[i].x, pos_iniciais_fantasmas[i].y, 'w');
-            fantasma[i].pos.x = pos_iniciais_fantasmas[i].x;
+            fantasma[i].pos.x = pos_iniciais_fantasmas[i].x; //PÕE O FANTASMA COM SUAS COORDENADAS INICIAIS
             fantasma[i].pos.y = pos_iniciais_fantasmas[i].y;
-            jogador->score = jogador->score + 200;
+            jogador->score = jogador->score + 200; //DA MAIS 200 PONTOS NO SCORE DO PACMAN
             gotoxy(12, 1);
             textbackground(BLUE);
             printf("%d", jogador->score);
             textbackground(BLACK);
         }
-
     }
 }
 
-void game_over (PACMAN *jogador)
+void game_over (PACMAN *jogador)//QUANDO ACABAM AS VIDAS DO JOGADOR
 {
-    gotoxy(35, 18);
+    gotoxy(48, 18);
     textbackground(YELLOW);
     textcolor(BLACK);
-    printf("ACABARAM SUAS VIDAS, LAMENTO.");
-    gotoxy(50, 20);
+    printf("ACABARAM SUAS VIDAS.");
+    gotoxy(49, 20);
     textbackground(BLACK);
     textcolor(YELLOW);
-    printf("Seu score foi: %d", jogador->score);
-    gotoxy(45, 28);
-    printf("Pressione enter para continuar.");
+    printf("Seu score foi: %d", jogador->score); //PRINTA O SCORE
+    gotoxy(43, 28);
+    printf("Pressione enter para continuar."); //E VAI PRA MAIN
     textcolor(WHITE);
 }
 
